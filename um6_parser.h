@@ -51,7 +51,9 @@
 #define UM6_PT_GET_CF(pt)         ((pt) & UM6_PT_BIT_CF)
 
 
-
+/*
+ * parser context:
+ */
 typedef struct
 {
    enum {
@@ -63,7 +65,8 @@ typedef struct
       UM6_DATA,
       UM6_CS1,
       UM6_CS2
-   } state; /* indicated what to read next */
+   } state; /* indicates what to read next */
+
    uint8_t pt;
    uint8_t data[UM6_DATA_MAX];
    uint8_t data_len;
