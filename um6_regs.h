@@ -150,5 +150,51 @@ typedef enum
 um6_data_reg_t;
 
 
+/* status register bits */
+#define UM6_STATUS_ST      (1 << 0)
+/* bits 1 - 12 reserved */
+#define UM6_STATUS_MAG_DEL (1 << 13)
+#define UM6_STATUS_ACC_DEL (1 << 14)
+#define UM6_STATUS_GYR_DEL (1 << 15)
+#define UM6_STATUS_EKF_DIV (1 << 16)
+#define UM6_STATUS_BUS_MAG (1 << 17)
+#define UM6_STATUS_BUS_ACC (1 << 18)
+#define UM6_STATUS_BUS_GYR (1 << 19)
+#define UM6_STATUS_ST_MZ   (1 << 20)
+#define UM6_STATUS_ST_MY   (1 << 21)
+#define UM6_STATUS_ST_MX   (1 << 22)
+#define UM6_STATUS_ST_AZ   (1 << 23)
+#define UM6_STATUS_ST_AY   (1 << 24)
+#define UM6_STATUS_ST_AX   (1 << 25)
+#define UM6_STATUS_ST_GZ   (1 << 26)
+#define UM6_STATUS_ST_GY   (1 << 27)
+#define UM6_STATUS_ST_GX   (1 << 28)
+#define UM6_STATUS_GYR_INI (1 << 29)
+#define UM6_STATUS_ACC_INI (1 << 30)
+#define UM6_STATUS_MAG_INI (1 << 31)
+
+
+/*
+ * command registers
+ */
+typedef enum
+{
+   UM6_GET_FW_VERSION = 0xAA,
+   UM6_FLASH_COMMIT,
+   UM6_ZERO_GYROS,
+   UM6_RESET_EKF,
+   UM6_GET_DATA,
+   UM6_SET_ACCEL_REF,
+   UM6_SET_MAG_REF,
+   UM6_RESET_TO_FACTORY,
+   UM6_CMD_RESERVED,
+   UM6_SET_HOME_POSITION,
+   UM6_BAD_CHECKSUM,
+   UM6_UNKNOWN_ADDRESS,
+   UM6_INVALID_BATCH_SIZE
+}
+um6_cmd_reg_t;
+
+
 #endif /* UM6_REGS_H */
 
