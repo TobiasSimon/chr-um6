@@ -24,7 +24,6 @@
 #include "um6_parser.h"
 
 
-
 /*
  * initializes the parser; must be called once before um6_parser_run
  */ 
@@ -115,4 +114,3 @@ int um6_parser_run(um6_parser_t *parser, const uint8_t c)
    }
    return ret;
 }
-
