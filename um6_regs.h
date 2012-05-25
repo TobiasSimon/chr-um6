@@ -1,4 +1,3 @@
-
 /* 
  * File: um6_regs.h
  * Purpose: CHR-UM6 Register Definitions
