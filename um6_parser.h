@@ -92,4 +92,3 @@ int um6_parser_run(um6_parser_t *parser, uint8_t c);
 
 
 #endif /* UM6_PARSER_H */
-
