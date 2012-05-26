@@ -1,4 +1,8 @@
 add_executable(um6_composer_test um6_composer_test.c)
 target_link_libraries(um6_composer_test um6_wire_format)
+
 add_executable(um6_parser_test um6_parser_test.c)
 target_link_libraries(um6_parser_test um6_wire_format)
+
+add_executable(um6_hardware_test um6_hardware_test.c)
+target_link_libraries(um6_hardware_test um6_wire_format serial pthread)

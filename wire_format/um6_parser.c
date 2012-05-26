@@ -110,7 +110,6 @@ int um6_parser_run(um6_parser_t *parser, const uint8_t c)
          }
          else
          {
-            printf("%X %X\n", submitted_crc, parser->crc);
             ret = -2;
          }
       }
