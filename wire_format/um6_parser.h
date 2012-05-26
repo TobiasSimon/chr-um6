@@ -25,30 +25,23 @@
 #define UM6_PARSER_H
 
 
+#include "um6_packet_bits.h"
+
 #include <stdint.h>
 
 
-#define UM6_DATA_MAX (15 * 4)
-
-
-/* 
- * bit definitions for PT command:
- */
-#define UM6_PT_BIT_DATA     (1 << 7)
-#define UM6_PT_BIT_BATCH    (1 << 6)
-#define UM6_PT_SHIFT_BATCH  (2)
-#define UM6_PT_BITS_BATCH   (0x0F << UM6_PT_SHIFT_BATCH)
-#define UM6_PT_BIT_RES      (1 << 1)
-#define UM6_PT_BIT_CF       (1 << 0)
-
-/*
- * access macros for PT command:
- */
-#define UM6_PT_GET_DATA(pt)       ((pt) & UM6_PT_BIT_DATA)
-#define UM6_PT_GET_BATCH(pt)      ((pt) & UM6_PT_BIT_BATCH)
-#define UM6_PT_GET_BATCH_SIZE(pt) (((pt) & UM6_PT_BITS_BATCH) >> UM6_PT_SHIFT_BATCH)
-#define UM6_PT_GET_RES(pt)        ((pt) & UM6_PT_BIT_RES)
-#define UM6_PT_GET_CF(pt)         ((pt) & UM6_PT_BIT_CF)
+typedef enum
+{
+   UM6_S,
+   UM6_N,
+   UM6_P,
+   UM6_PT,
+   UM6_CA,
+   UM6_DATA,
+   UM6_CS1,
+   UM6_CS2
+}
+um6_parser_state_t;
 
 
 /*
@@ -56,18 +49,11 @@
  */
 typedef struct
 {
-   enum {
-      UM6_S,
-      UM6_N,
-      UM6_P,
-      UM6_PT,
-      UM6_ADDR,
-      UM6_DATA,
-      UM6_CS1,
-      UM6_CS2
-   } state; /* indicates what to read next */
+   um6_parser_state_t state; /* indicates what to read next */
+   um6_parser_state_t state_after_ca; /* indicates what to read after ca state */
 
    uint8_t pt;
+   uint8_t ca;
    uint8_t data[UM6_DATA_MAX];
    uint8_t data_len;
    uint8_t tmp;
@@ -92,3 +78,4 @@ int um6_parser_run(um6_parser_t *parser, uint8_t c);
 
 
 #endif /* UM6_PARSER_H */
+

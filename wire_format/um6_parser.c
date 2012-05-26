@@ -43,17 +43,17 @@ void um6_parser_init(um6_parser_t *parser)
 int um6_parser_run(um6_parser_t *parser, const uint8_t c)
 {
    int ret = 0;
-   if (parser->state == UM6_S && c == 's')
+   if (parser->state == UM6_S && c == UM6_SYNC_1)
    {
       parser->state = UM6_N;
    }
-   else if (parser->state == UM6_N && c == 'n')
+   else if (parser->state == UM6_N && c == UM6_SYNC_2)
    {
       parser->state = UM6_P;
    }
-   else if (parser->state == UM6_P && c == 'p')
+   else if (parser->state == UM6_P && c == UM6_SYNC_3)
    {
-      parser->crc = 's' + 'n' + 'p';
+      parser->crc = UM6_SYNC_CRC;
       parser->state = UM6_PT;
    }
    else if (parser->state == UM6_PT)
@@ -61,26 +61,33 @@ int um6_parser_run(um6_parser_t *parser, const uint8_t c)
       parser->pt = c;
       if (!UM6_PT_GET_DATA(c))
       {
-         parser->state = UM6_CS1;
+         parser->state_after_ca = UM6_CS1;
       }
       else
       {
          parser->tmp = 0;
          if (!UM6_PT_GET_BATCH(c))
          {
-            parser->data_len = 4;
+            parser->data_len = UM6_DATA_ITEM_SIZE;
          }
          else
          {
-            parser->data_len = UM6_PT_GET_BATCH_SIZE(c) * 4;
+            parser->data_len = UM6_PT_GET_BATCH_SIZE(c) * UM6_DATA_ITEM_SIZE;
          }
-         parser->state = UM6_DATA;
+         parser->state_after_ca = UM6_DATA;
       }
       parser->crc += c;
+      parser->state = UM6_CA;
+   }
+   else if (parser->state == UM6_CA)
+   {
+      parser->ca = c;
+      parser->crc += c;
+      parser->state = parser->state_after_ca;
    }
    else if (parser->state == UM6_DATA)
    {
-      if (parser->tmp == parser->data_len)
+      if (parser->tmp == parser->data_len - 1)
       {
          parser->state = UM6_CS1;
       }
@@ -96,13 +103,14 @@ int um6_parser_run(um6_parser_t *parser, const uint8_t c)
    {
       if (parser->state == UM6_CS2)
       {
-         const uint16_t submitted_crc = (parser->tmp << 8) | c;
+         const uint16_t submitted_crc = UM6_CRC_BUILD(c, parser->tmp);
          if (submitted_crc == parser->crc)
          {
             ret = 1;
          }
          else
          {
+            printf("%X %X\n", submitted_crc, parser->crc);
             ret = -2;
          }
       }
@@ -114,3 +122,4 @@ int um6_parser_run(um6_parser_t *parser, const uint8_t c)
    }
    return ret;
 }
+
