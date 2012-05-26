@@ -203,6 +203,63 @@
 
 
 
+/* miscellaneous configuration options */
+#define UM6_MISC_CONFIG (0x1)
+/* bits 0 - 26 ignored */
+
+/* PPS timing enabled */
+#define UM6_MISC_CONFIG_GET_PPS(x) \
+   (((x) >> 27) & 1)
+#define UM6_MISC_CONFIG_SET_PPS(x) \
+   do {x |= 1 << 27;} while (0)
+#define UM6_MISC_CONFIG_CLEAR_PPS(x) \
+   do {x &= ~(1 << 27);} while (0)
+
+/* quaterion estimation enabled */
+#define UM6_MISC_CONFIG_GET_QUAT(x) \
+   (((x) >> 28) & 1)
+#define UM6_MISC_CONFIG_SET_QUAT(x) \
+   do {x |= 1 << 28;} while (0)
+#define UM6_MISC_CONFIG_CLEAR_QUAT(x) \
+   do {x &= ~(1 << 28);} while (0)
+
+/* start-up gyroscope calibration enabled */
+#define UM6_MISC_CONFIG_GET_CAL(x) \
+   (((x) >> 29) & 1)
+#define UM6_MISC_CONFIG_SET_CAL(x) \
+   do {x |= 1 << 29;} while (0)
+#define UM6_MISC_CONFIG_CLEAR_CAL(x) \
+   do {x &= ~(1 << 29);} while (0)
+
+/* EKF accelerometer updated enabled */
+#define UM6_MISC_CONFIG_GET_AUE(x) \
+   (((x) >> 30) & 1)
+#define UM6_MISC_CONFIG_SET_AUE(x) \
+   do {x |= 1 << 30;} while (0)
+#define UM6_MISC_CONFIG_CLEAR_AUE(x) \
+   do {x &= ~(1 << 30);} while (0)
+
+/* EKF magnetometer updates enabled */
+#define UM6_MISC_CONFIG_GET_MUE(x) \
+   (((x) >> 31) & 1)
+#define UM6_MISC_CONFIG_SET_MUE(x) \
+   do {x |= 1 << 31;} while (0)
+#define UM6_MISC_CONFIG_CLEAR_MUE(x) \
+   do {x &= ~(1 << 31);} while (0)
+
+#define UM6_MISC_CONFIG_DEBUG(x) \
+   do { printf("MISC_CONFIG: PPS = %X, "\
+      "QUAT = %X, "\
+      "CAL = %X, "\
+      "AUE = %X, "\
+      "MUE = %X\n", UM6_MISC_CONFIG_GET_PPS(x), \
+      UM6_MISC_CONFIG_GET_QUAT(x), \
+      UM6_MISC_CONFIG_GET_CAL(x), \
+      UM6_MISC_CONFIG_GET_AUE(x), \
+      UM6_MISC_CONFIG_GET_MUE(x)); } while(0)
+
+
+
 /* status */
 #define UM6_STATUS (0x55)
 /* self-test complete */

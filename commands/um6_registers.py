@@ -45,6 +45,16 @@ regs = [
          None
       ]
    ),
+   ('MISC_CONFIG', 0x01, 32, 'miscellaneous configuration options',
+      [
+         (None,   27),
+         ('PPS',  'PPS timing enabled'),
+         ('QUAT', 'quaterion estimation enabled'),
+         ('CAL',  'start-up gyroscope calibration enabled'),
+         ('AUE',  'EKF accelerometer updated enabled'),
+         ('MUE',  'EKF magnetometer updates enabled')
+      ]
+   ),
    ('STATUS', 0x55, 32, 'status',
       [
          ('ST', 'self-test complete'),
