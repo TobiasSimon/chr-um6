@@ -213,7 +213,7 @@
 #define UM6_STATUS_CLEAR_ST(x) \
    do {x &= ~(1 << 0);} while (0)
 
-/* bit 1 ignored */
+/* bits 1 - 12 ignored */
 
 /* magnetometer data delay */
 #define UM6_STATUS_GET_MAG_DEL(x) \
@@ -407,6 +407,37 @@
       UM6_STATUS_GET_GYR_INI(x), \
       UM6_STATUS_GET_ACC_INI(x), \
       UM6_STATUS_GET_MAG_INI(x)); } while(0)
+
+
+
+#define UM6_EULER_PHI_THETA (0x62)
+#define UM6_EULER_PHI_THETA_GET_PHI(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_EULER_PHI_THETA_SET_PHI(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+#define UM6_EULER_PHI_THETA_GET_THETA(x) \
+   (((x) >> 16) & 0xffff)
+#define UM6_EULER_PHI_THETA_SET_THETA(x, v) \
+   do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
+
+#define UM6_EULER_PHI_THETA_DEBUG(x) \
+   do { printf("EULER_PHI_THETA: PHI = %X, "\
+      "THETA = %X\n", UM6_EULER_PHI_THETA_GET_PHI(x), \
+      UM6_EULER_PHI_THETA_GET_THETA(x)); } while(0)
+
+
+
+#define UM6_EULER_PSI (0x63)
+#define UM6_EULER_PSI_GET_PSI(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_EULER_PSI_SET_PSI(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+/* bits 16 - 31 ignored */
+
+#define UM6_EULER_PSI_DEBUG(x) \
+   do { printf("EULER_PSI: PSI = %X\n", UM6_EULER_PSI_GET_PSI(x)); } while(0)
 
 #endif /* __UM6_REGS_H__ */
 

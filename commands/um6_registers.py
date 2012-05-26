@@ -69,6 +69,18 @@ regs = [
          ('ACC_INI', 'accelerometer init failed'),
          ('MAG_INI', 'magnetometer init failed')
       ]
+   ),
+   ('EULER_PHI_THETA', 0x62, 32,
+      [
+         ('PHI', 16),
+         ('THETA', 16)
+      ]
+   ),
+   ('EULER_PSI', 0x63, 32,
+      [
+         ('PSI', 16),
+         (None, 16)
+      ]
    )
 ]
 
