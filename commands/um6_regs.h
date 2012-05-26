@@ -30,7 +30,7 @@
  */
 typedef enum
 {
-   UM6_COMMUNICATION = 0x00,
+   UM6_COMM = 0x00,
    UM6_MISC_CONFIG,
    UM6_MAG_REF_X,
    UM6_MAG_REF_Y,
