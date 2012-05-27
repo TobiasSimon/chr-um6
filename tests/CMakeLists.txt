@@ -5,4 +5,4 @@ add_executable(um6_parser_test um6_parser_test.c)
 target_link_libraries(um6_parser_test um6_wire_format)
 
 add_executable(um6_hardware_test um6_hardware_test.c)
-target_link_libraries(um6_hardware_test um6_wire_format serial pthread)
+target_link_libraries(um6_hardware_test chr_um6 um6_wire_format um6_regs posix_sys pthread m)

@@ -8,7 +8,7 @@
 #include <pthread.h>
 #include <assert.h>
 
-#include "serial.h"
+#include "posix_serial.h"
 
 
 static pthread_mutex_t write_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -194,6 +194,12 @@ int serial_write(const serialport_t *port, const char *buffer, unsigned int len)
    err = write(port->handle, buffer, len);
    pthread_mutex_unlock(&write_mutex);
    return err;
+}
+
+
+int serial_write_char(const serialport_t *port, unsigned char c)
+{
+   return serial_write(port, &c, 1);
 }
 
 

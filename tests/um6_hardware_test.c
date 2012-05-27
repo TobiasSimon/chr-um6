@@ -22,181 +22,47 @@
 
 
 
-#include "../wire_format/um6_composer.h"
-#include "../wire_format/um6_parser.h"
 #include "../regs/um6_regs.h"
-#include "../util/serial.h"
-
-
-#include <endian.h>
+#include "../interface/chr_um6.h"
+#include "../sys/posix_serial.h"
+#include "../sys/posix_lock.h"
 #include <pthread.h>
 #include <stdio.h>
-#include <math.h>
-
-
-/*
- * convert from little endian character array to int16
- */
-int16_t be16toi16(uint16_t data)
-{
-   uint16_t tmp = be16toh(data);
-   return *(int16_t *)&tmp;
-}
-
-
-/*
- * network string [4 bytes binary] to 32-bit host float
- */
-float ntohf(uint8_t *data)
-{
-  uint32_t host_data = be32toh(*(uint32_t *)data);
-  return *((float *)&host_data);
-}
-
-
-inline float euler_from_uint16(uint16_t val)
-{
-   int16_t tmp = be16toi16(val);
-   return ((float)tmp) * 0.0109863 / 180.0 * M_PI;
-}
-
-
-inline float gyro_from_uint16(uint16_t val)
-{
-   int16_t tmp = be16toi16(val);
-   return ((float)tmp) * 0.0610352 / 180.0 * M_PI;
-}
-
-
-inline float acc_from_uint16(uint16_t val)
-{
-   int16_t tmp = be16toi16(val);
-   return ((float)tmp) * 0.000183105;
-}
-
-
-inline float mag_from_uint16(uint16_t val)
-{
-   int16_t tmp = be16toi16(val);
-   return ((float)tmp) * 0.000305176;
-}
-
-
-void handle_data(uint8_t ca, uint8_t *data)
-{
-   uint32_t data32_1 = le32toh(*(uint32_t *)data);
-   uint32_t data32_2 = le32toh(*(uint32_t *)(data + 4));
-   switch (ca)
-   {
-      case UM6_STATUS:
-         UM6_STATUS_DEBUG(data32_1);
-         break;
-      
-      case UM6_TEMPERATURE:
-         printf("temperature: %f\n", ntohf(data));
-         break;
-      
-      case UM6_COMM:
-         UM6_COMM_DEBUG(data32_1);
-         break;
-      
-      case UM6_GYRO_RAW1:
-      {
-         float grx = gyro_from_uint16(UM6_GYRO_RAW1_GET_X(data32_1));
-         float gry = gyro_from_uint16(UM6_GYRO_RAW1_GET_Y(data32_1));
-         float grz = gyro_from_uint16(UM6_GYRO_RAW2_GET_Z(data32_2));
-         printf("gyro raw x = %f y = %f z = %f\n", grx, gry, grz);
-         break;
-      }
-
-      case UM6_GYRO_PROC1:
-      {
-         float gx = gyro_from_uint16(UM6_GYRO_PROC1_GET_X(data32_1));
-         float gy = gyro_from_uint16(UM6_GYRO_PROC1_GET_Y(data32_1));
-         float gz = gyro_from_uint16(UM6_GYRO_PROC2_GET_Z(data32_2));
-         printf("gyro x = %f y = %f z = %f\n", gx, gy, gz);
-         break;
-      }
-
-      case UM6_ACC_PROC1:
-      {
-         float ax = acc_from_uint16(UM6_ACC_PROC1_GET_X(data32_1));
-         float ay = acc_from_uint16(UM6_ACC_PROC1_GET_Y(data32_1));
-         float az = acc_from_uint16(UM6_ACC_PROC2_GET_Z(data32_2));
-         printf("acc x = %f y = %f z = %f\n", ax, ay, az);
-         break;
-      }
-
-      case UM6_MAG_PROC1:
-      {
-         float mx = mag_from_uint16(UM6_MAG_PROC1_GET_X(data32_1));
-         float my = mag_from_uint16(UM6_MAG_PROC1_GET_Y(data32_1));
-         float mz = mag_from_uint16(UM6_MAG_PROC2_GET_Z(data32_2));
-         printf("mag x = %f y = %f z = %f\n", mx, my, mz);
-         break;
-      }
-
-      case UM6_EULER1:
-      {
-         float phi = euler_from_uint16(UM6_EULER1_GET_PHI(data32_1));
-         float theta = euler_from_uint16(UM6_EULER1_GET_THETA(data32_1));
-         float psi = euler_from_uint16(UM6_EULER2_GET_PSI(data32_2));
-         printf("euler roll = %f pitch = %f yaw = %f\n", phi, theta, psi);
-         break;
-      }
-
-      default:
-         printf("%X\n", ca);
-   }
-}
-
-
-void *um6_reader(void *ptr)
-{
-   serialport_t *port = ptr;
-   um6_parser_t parser;
-   um6_parser_init(&parser);
-   int start = 0;
-   while (1)
-   {
-      int c = serial_read_char(port);
-      if (c >= 0)
-      {
-         int ret = um6_parser_run(&parser, c);
-         if (ret == 1)
-         {
-            handle_data(parser.ca, parser.data);
-         }
-         else if (ret < 0 && start++ > UM6_DATA_MAX)
-         {
-            start = UM6_DATA_MAX;
-            printf("error: %d\n", ret);
-         }
-      }
-      else
-      {
-         fprintf(stderr, "could not read\n");
-      }
-   }
-   pthread_exit(NULL);
-}
+#include <unistd.h>
 
 
 int main(void)
-{
+{   
+   um6_dev_t dev;
+   um6_lock_t lock;
+   um6_io_t io;
+
    serialport_t port;
    serial_open(&port, "/dev/ttyUSB0", 115200, 0, 0, 0);
    
+   io.context = (void *)&port;
+   io.read = (int(*)(void *))serial_read_char;
+   io.write = (int(*)(void *, uint8_t))serial_write_char;
+
+   um6_posix_lock_init(&lock);
+   um6_dev_init(&dev, &lock, &io);
+   dev.lock = &lock;
+   dev.io = &io;
+
    pthread_t thread;
-   pthread_create(&thread, NULL, um6_reader, &port);
+   pthread_create(&thread, NULL, um6_reader, &dev);
+   sleep(1);
   
-   um6_composer_t composer;
-   um6_composer_init(&composer);
    while (1)
    {
+      um6_compose_and_send(&dev, NULL, 0, 0, UM6_COMM);
+      um6_lock(&dev);
+      if (dev.data.temperature.valid)
+      {
+         printf("TEMPERATURE: %f\n", dev.data.temperature.val);
+      }
+      um6_unlock(&dev);
       sleep(1);
-      um6_composer_run(&composer, NULL, 0, 0, UM6_COMM);
-      serial_write(&port, composer.data, composer.size);
    }
    return 0;
 }
