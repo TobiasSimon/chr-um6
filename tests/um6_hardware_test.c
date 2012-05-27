@@ -26,12 +26,22 @@
 #include "../wire_format/um6_parser.h"
 #include "../regs/um6_regs.h"
 #include "../util/serial.h"
-#include <netinet/in.h>
 
 
+#include <endian.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <math.h>
+
+
+/*
+ * convert from little endian character array to int16
+ */
+int16_t be16toi16(uint16_t data)
+{
+   uint16_t tmp = be16toh(data);
+   return *(int16_t *)&tmp;
+}
 
 
 /*
@@ -39,47 +49,43 @@
  */
 float ntohf(uint8_t *data)
 {
-  uint32_t host_data = ntohl(*(uint32_t *)data);
+  uint32_t host_data = be32toh(*(uint32_t *)data);
   return *((float *)&host_data);
 }
 
 
 inline float euler_from_uint16(uint16_t val)
 {
-   val = ntohs(val);
-   int16_t *tmp = &val;
-   return ((float)*tmp) * 0.0109863 / 180.0 * M_PI;
+   int16_t tmp = be16toi16(val);
+   return ((float)tmp) * 0.0109863 / 180.0 * M_PI;
 }
 
 
 inline float gyro_from_uint16(uint16_t val)
 {
-   val = ntohs(val);
-   int16_t *tmp = &val;
-   return ((float)*tmp) * 0.0610352 / 180.0 * M_PI;
+   int16_t tmp = be16toi16(val);
+   return ((float)tmp) * 0.0610352 / 180.0 * M_PI;
 }
 
 
 inline float acc_from_uint16(uint16_t val)
 {
-   val = ntohs(val);
-   int16_t *tmp = &val;
-   return ((float)*tmp) * 0.000183105;
+   int16_t tmp = be16toi16(val);
+   return ((float)tmp) * 0.000183105;
 }
 
 
 inline float mag_from_uint16(uint16_t val)
 {
-   val = ntohs(val);
-   int16_t *tmp = &val;
-   return ((float)*tmp) * 0.000305176;
+   int16_t tmp = be16toi16(val);
+   return ((float)tmp) * 0.000305176;
 }
 
 
 void handle_data(uint8_t ca, uint8_t *data)
 {
-   uint32_t data32_1 = *(uint32_t *)data;
-   uint32_t data32_2 = *(uint32_t *)(data + 4);
+   uint32_t data32_1 = le32toh(*(uint32_t *)data);
+   uint32_t data32_2 = le32toh(*(uint32_t *)(data + 4));
    switch (ca)
    {
       case UM6_STATUS:
