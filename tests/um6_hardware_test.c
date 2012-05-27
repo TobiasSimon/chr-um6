@@ -24,8 +24,8 @@
 
 #include "../wire_format/um6_composer.h"
 #include "../wire_format/um6_parser.h"
+#include "../regs/um6_regs.h"
 #include "../util/serial.h"
-#include "../commands/um6_registers.h"
 #include <netinet/in.h>
 
 
