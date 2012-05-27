@@ -21,8 +21,8 @@
  */
 
 
-#ifndef UM6_PACKET_BITS_H
-#define UM6_PACKET_BITS_H
+#ifndef __UM6_PACKET_BITS_H__
+#define __UM6_PACKET_BITS_H__
 
 /*
  * general packet information:
@@ -82,5 +82,5 @@
 #define UM6_CA_VALID(ca) (((ca) >= 0 && (ca) <= 0x40) || ((ca) >= 0x55 && (ca) <= 0x84) || ((ca) >= 0xAA && (ca) <= 0xFF))
 
 
-#endif /* UM6_PACKET_BITS_H */
+#endif /* __UM6_PACKET_BITS_H__ */
 

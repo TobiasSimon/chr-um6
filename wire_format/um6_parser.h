@@ -21,8 +21,8 @@
  */
 
 
-#ifndef UM6_PARSER_H
-#define UM6_PARSER_H
+#ifndef __UM6_PARSER_H__
+#define __UM6_PARSER_H__
 
 
 #include "um6_packet_bits.h"
@@ -77,5 +77,5 @@ void um6_parser_init(um6_parser_t *parser);
 int um6_parser_run(um6_parser_t *parser, uint8_t c);
 
 
-#endif /* UM6_PARSER_H */
+#endif /* __UM6_PARSER_H__ */
 

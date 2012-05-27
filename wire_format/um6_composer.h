@@ -21,8 +21,8 @@
  */
 
 
-#ifndef UM6_COMPOSER_H
-#define UM6_COMPOSER_H
+#ifndef __UM6_COMPOSER_H__
+#define __UM6_COMPOSER_H__
 
 
 #include "um6_packet_bits.h"
@@ -50,5 +50,5 @@ void um6_composer_run(um6_composer_t *composer, const uint8_t *data, const uint8
                       const uint8_t is_batch, const uint8_t ca);
 
 
-#endif /* UM6_COMPOSER_H */
+#endif /* __UM6_COMPOSER_H__ */
 
