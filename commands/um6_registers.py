@@ -80,17 +80,67 @@ regs = [
          ('MAG_INI', 'magnetometer init failed')
       ]
    ),
-   ('EULER_PHI_THETA', 0x62, 32,
+   ('GYRO_RAW1', 0x56, 32,
+      [
+         ('X', 16),
+         ('Y', 16)
+      ]
+   ),
+   ('GYRO_RAW2', 0x57, 32, # this one is not sent individually - data follows GYRO_PROC1.
+      [
+         ('Z', 16),
+         (None, 16)
+      ]
+   ),
+   ('GYRO_PROC1', 0x5C, 32,
+      [
+         ('X', 16),
+         ('Y', 16)
+      ]
+   ),
+   ('GYRO_PROC2', 0x5D, 32, # this one is not sent individually - data follows GYRO_PROC1.
+      [
+         ('Z', 16),
+         (None, 16)
+      ]
+   ),
+   ('ACC_PROC1', 0x5E, 32,
+      [
+         ('X', 16),
+         ('Y', 16)
+      ]
+   ),
+   ('ACC_PROC2', 0x5F, 32, # this one is not sent individually - data follows ACC_PROC1.
+      [
+         ('Z', 16),
+         (None, 16)
+      ]
+   ),
+   ('MAG_PROC1', 0x60, 32,
+      [
+         ('X', 16),
+         ('Y', 16)
+      ]
+   ),
+   ('MAG_PROC2', 0x61, 32, # this one is not sent individually - data follows MAG_PROC1.
+      [
+         ('Z', 16),
+         (None, 16)
+      ]
+   ),
+   ('EULER1', 0x62, 32,
       [
          ('PHI', 16),
          ('THETA', 16)
       ]
    ),
-   ('EULER_PSI', 0x63, 32,
+   ('EULER2', 0x63, 32, # this one is not sent individually - data follows EULER1.
       [
          ('PSI', 16),
          (None, 16)
       ]
-   )
+   ),
+   ('TEMPERATURE', 0x76, 32)
+
 ]
 

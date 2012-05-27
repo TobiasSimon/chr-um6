@@ -22,61 +22,103 @@ float ntohf(uint8_t *data)
 }
 
 
-typedef struct
+inline float euler_from_uint16(uint16_t val)
 {
-   uint8_t valid;
-
-   enum
-   {
-      TYPE_FLOAT,
-      TYPE_INT,
-      TYPE_STR
-   }
-   type;
-
-   union
-   {
-      float fl;
-      int i;
-      char str[5];
-   };
-};
-
-
-float euler_from_uint16(uint16_t val)
-{
+   val = ntohs(val);
    int16_t *tmp = &val;
    return ((float)*tmp) * 0.0109863 / 180.0 * M_PI;
 }
 
 
+inline float gyro_from_uint16(uint16_t val)
+{
+   val = ntohs(val);
+   int16_t *tmp = &val;
+   return ((float)*tmp) * 0.0610352 / 180.0 * M_PI;
+}
+
+
+inline float acc_from_uint16(uint16_t val)
+{
+   val = ntohs(val);
+   int16_t *tmp = &val;
+   return ((float)*tmp) * 0.000183105;
+}
+
+
+inline float mag_from_uint16(uint16_t val)
+{
+   val = ntohs(val);
+   int16_t *tmp = &val;
+   return ((float)*tmp) * 0.000305176;
+}
+
+
 void handle_data(uint8_t ca, uint8_t *data)
 {
-   uint32_t data32 = ntohl(*(uint32_t *)data);
-   switch(ca)
+   uint32_t data32_1 = *(uint32_t *)data;
+   uint32_t data32_2 = *(uint32_t *)(data + 4);
+   switch (ca)
    {
       case UM6_STATUS:
-         UM6_STATUS_DEBUG(data32);
+         UM6_STATUS_DEBUG(data32_1);
+         break;
+      
+      case UM6_TEMPERATURE:
+         printf("temperature: %f\n", ntohf(data));
          break;
       
       case UM6_COMM:
-         UM6_COMM_DEBUG(data32);
+         UM6_COMM_DEBUG(data32_1);
          break;
-
-      case UM6_EULER_PHI_THETA:
+      
+      case UM6_GYRO_RAW1:
       {
-         float phi = euler_from_uint16(UM6_EULER_PHI_THETA_GET_PHI(data32));
-         float theta = euler_from_uint16(UM6_EULER_PHI_THETA_GET_THETA(data32));
-         printf("euler %f %f\n", phi, theta);
+         float grx = gyro_from_uint16(UM6_GYRO_RAW1_GET_X(data32_1));
+         float gry = gyro_from_uint16(UM6_GYRO_RAW1_GET_Y(data32_1));
+         float grz = gyro_from_uint16(UM6_GYRO_RAW2_GET_Z(data32_2));
+         printf("gyro raw x = %f y = %f z = %f\n", grx, gry, grz);
          break;
       }
 
-      case UM6_EULER_PSI:
+      case UM6_GYRO_PROC1:
       {
-         float psi = euler_from_uint16(UM6_EULER_PSI_GET_PSI(data32));
-         printf("euler %f\n", psi);
+         float gx = gyro_from_uint16(UM6_GYRO_PROC1_GET_X(data32_1));
+         float gy = gyro_from_uint16(UM6_GYRO_PROC1_GET_Y(data32_1));
+         float gz = gyro_from_uint16(UM6_GYRO_PROC2_GET_Z(data32_2));
+         printf("gyro x = %f y = %f z = %f\n", gx, gy, gz);
          break;
       }
+
+      case UM6_ACC_PROC1:
+      {
+         float ax = acc_from_uint16(UM6_ACC_PROC1_GET_X(data32_1));
+         float ay = acc_from_uint16(UM6_ACC_PROC1_GET_Y(data32_1));
+         float az = acc_from_uint16(UM6_ACC_PROC2_GET_Z(data32_2));
+         printf("acc x = %f y = %f z = %f\n", ax, ay, az);
+         break;
+      }
+
+      case UM6_MAG_PROC1:
+      {
+         float mx = mag_from_uint16(UM6_MAG_PROC1_GET_X(data32_1));
+         float my = mag_from_uint16(UM6_MAG_PROC1_GET_Y(data32_1));
+         float mz = mag_from_uint16(UM6_MAG_PROC2_GET_Z(data32_2));
+         printf("mag x = %f y = %f z = %f\n", mx, my, mz);
+         break;
+      }
+
+      case UM6_EULER1:
+      {
+         float phi = euler_from_uint16(UM6_EULER1_GET_PHI(data32_1));
+         float theta = euler_from_uint16(UM6_EULER1_GET_THETA(data32_1));
+         float psi = euler_from_uint16(UM6_EULER2_GET_PSI(data32_2));
+         printf("euler roll = %f pitch = %f yaw = %f\n", phi, theta, psi);
+         break;
+      }
+
+      default:
+         printf("%X\n", ca);
    }
 }
 

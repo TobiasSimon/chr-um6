@@ -467,34 +467,162 @@
 
 
 
-#define UM6_EULER_PHI_THETA (0x62)
-#define UM6_EULER_PHI_THETA_GET_PHI(x) \
+#define UM6_GYRO_RAW1 (0x56)
+#define UM6_GYRO_RAW1_GET_X(x) \
    (((x) >> 0) & 0xffff)
-#define UM6_EULER_PHI_THETA_SET_PHI(x, v) \
+#define UM6_GYRO_RAW1_SET_X(x, v) \
    do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
 
-#define UM6_EULER_PHI_THETA_GET_THETA(x) \
+#define UM6_GYRO_RAW1_GET_Y(x) \
    (((x) >> 16) & 0xffff)
-#define UM6_EULER_PHI_THETA_SET_THETA(x, v) \
+#define UM6_GYRO_RAW1_SET_Y(x, v) \
    do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
 
-#define UM6_EULER_PHI_THETA_DEBUG(x) \
-   do { printf("EULER_PHI_THETA: PHI = %X, "\
-      "THETA = %X\n", UM6_EULER_PHI_THETA_GET_PHI(x), \
-      UM6_EULER_PHI_THETA_GET_THETA(x)); } while(0)
+#define UM6_GYRO_RAW1_DEBUG(x) \
+   do { printf("GYRO_RAW1: X = %X, "\
+      "Y = %X\n", UM6_GYRO_RAW1_GET_X(x), \
+      UM6_GYRO_RAW1_GET_Y(x)); } while(0)
 
 
 
-#define UM6_EULER_PSI (0x63)
-#define UM6_EULER_PSI_GET_PSI(x) \
+#define UM6_GYRO_RAW2 (0x57)
+#define UM6_GYRO_RAW2_GET_Z(x) \
    (((x) >> 0) & 0xffff)
-#define UM6_EULER_PSI_SET_PSI(x, v) \
+#define UM6_GYRO_RAW2_SET_Z(x, v) \
    do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
 
 /* bits 16 - 31 ignored */
 
-#define UM6_EULER_PSI_DEBUG(x) \
-   do { printf("EULER_PSI: PSI = %X\n", UM6_EULER_PSI_GET_PSI(x)); } while(0)
+#define UM6_GYRO_RAW2_DEBUG(x) \
+   do { printf("GYRO_RAW2: Z = %X\n", UM6_GYRO_RAW2_GET_Z(x)); } while(0)
+
+
+
+#define UM6_GYRO_PROC1 (0x5c)
+#define UM6_GYRO_PROC1_GET_X(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_GYRO_PROC1_SET_X(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+#define UM6_GYRO_PROC1_GET_Y(x) \
+   (((x) >> 16) & 0xffff)
+#define UM6_GYRO_PROC1_SET_Y(x, v) \
+   do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
+
+#define UM6_GYRO_PROC1_DEBUG(x) \
+   do { printf("GYRO_PROC1: X = %X, "\
+      "Y = %X\n", UM6_GYRO_PROC1_GET_X(x), \
+      UM6_GYRO_PROC1_GET_Y(x)); } while(0)
+
+
+
+#define UM6_GYRO_PROC2 (0x5d)
+#define UM6_GYRO_PROC2_GET_Z(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_GYRO_PROC2_SET_Z(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+/* bits 16 - 31 ignored */
+
+#define UM6_GYRO_PROC2_DEBUG(x) \
+   do { printf("GYRO_PROC2: Z = %X\n", UM6_GYRO_PROC2_GET_Z(x)); } while(0)
+
+
+
+#define UM6_ACC_PROC1 (0x5e)
+#define UM6_ACC_PROC1_GET_X(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_ACC_PROC1_SET_X(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+#define UM6_ACC_PROC1_GET_Y(x) \
+   (((x) >> 16) & 0xffff)
+#define UM6_ACC_PROC1_SET_Y(x, v) \
+   do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
+
+#define UM6_ACC_PROC1_DEBUG(x) \
+   do { printf("ACC_PROC1: X = %X, "\
+      "Y = %X\n", UM6_ACC_PROC1_GET_X(x), \
+      UM6_ACC_PROC1_GET_Y(x)); } while(0)
+
+
+
+#define UM6_ACC_PROC2 (0x5f)
+#define UM6_ACC_PROC2_GET_Z(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_ACC_PROC2_SET_Z(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+/* bits 16 - 31 ignored */
+
+#define UM6_ACC_PROC2_DEBUG(x) \
+   do { printf("ACC_PROC2: Z = %X\n", UM6_ACC_PROC2_GET_Z(x)); } while(0)
+
+
+
+#define UM6_MAG_PROC1 (0x60)
+#define UM6_MAG_PROC1_GET_X(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_MAG_PROC1_SET_X(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+#define UM6_MAG_PROC1_GET_Y(x) \
+   (((x) >> 16) & 0xffff)
+#define UM6_MAG_PROC1_SET_Y(x, v) \
+   do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
+
+#define UM6_MAG_PROC1_DEBUG(x) \
+   do { printf("MAG_PROC1: X = %X, "\
+      "Y = %X\n", UM6_MAG_PROC1_GET_X(x), \
+      UM6_MAG_PROC1_GET_Y(x)); } while(0)
+
+
+
+#define UM6_MAG_PROC2 (0x61)
+#define UM6_MAG_PROC2_GET_Z(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_MAG_PROC2_SET_Z(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+/* bits 16 - 31 ignored */
+
+#define UM6_MAG_PROC2_DEBUG(x) \
+   do { printf("MAG_PROC2: Z = %X\n", UM6_MAG_PROC2_GET_Z(x)); } while(0)
+
+
+
+#define UM6_EULER1 (0x62)
+#define UM6_EULER1_GET_PHI(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_EULER1_SET_PHI(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+#define UM6_EULER1_GET_THETA(x) \
+   (((x) >> 16) & 0xffff)
+#define UM6_EULER1_SET_THETA(x, v) \
+   do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
+
+#define UM6_EULER1_DEBUG(x) \
+   do { printf("EULER1: PHI = %X, "\
+      "THETA = %X\n", UM6_EULER1_GET_PHI(x), \
+      UM6_EULER1_GET_THETA(x)); } while(0)
+
+
+
+#define UM6_EULER2 (0x63)
+#define UM6_EULER2_GET_PSI(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_EULER2_SET_PSI(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+/* bits 16 - 31 ignored */
+
+#define UM6_EULER2_DEBUG(x) \
+   do { printf("EULER2: PSI = %X\n", UM6_EULER2_GET_PSI(x)); } while(0)
+
+
+
+#define UM6_TEMPERATURE (0x76)
 
 #endif /* __UM6_REGS_H__ */
 
