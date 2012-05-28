@@ -1,1 +1,1 @@
-add_library(posix_sys posix_serial.c posix_lock.c)
+add_library(posix_sys posix_serial.c posix_lock.c posix_event.c)

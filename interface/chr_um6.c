@@ -33,6 +33,31 @@
 #include <math.h>
 
 
+void um6_event_init(um6_event_t *event, um6_event_interface_t *interface)
+{
+   event->data = interface->create();
+   event->interface = interface;
+}
+
+
+int um6_event_timed_wait(um6_event_t *event, unsigned int timeout)
+{
+   return event->interface->timed_wait(event->data, timeout);
+}
+
+
+void um6_event_wait(um6_event_t *event)
+{
+   event->interface->wait(event->data);
+}
+
+
+void um6_event_signal(um6_event_t *event)
+{
+   event->interface->signal(event->data);
+}
+
+
 int um6_lock(um6_dev_t *dev)
 {
    return dev->lock->lock(dev->lock->context);
@@ -52,62 +77,62 @@ static void handle_data(um6_data_t *data_out, uint8_t ca, uint8_t *data)
    switch (ca)
    {
       case UM6_STATUS:
-         //TODO UM6_STATUS_DEBUG(data32_1);
+         data_out->status.data = data32_1;
+         data_out->status.valid = 1;
+         um6_event_signal(&data_out->status.event);
          break;
       
       case UM6_TEMPERATURE:
-         data_out->temperature.val = float_from_uint32(*(uint32_t *)data);
+         data_out->temperature.data = float_from_uint32(*(uint32_t *)data);
          data_out->temperature.valid = 1;
+         um6_event_signal(&data_out->temperature.event);
          break;
       
       case UM6_COMM:
-         //TODO UM6_COMM_DEBUG(data32_1);
+         data_out->comm.data = data32_1;
+         data_out->comm.valid = 1;
+         um6_event_signal(&data_out->comm.event);
          break;
       
       case UM6_GYRO_RAW1:
-      {
-         float grx = gyro_from_uint16(UM6_GYRO_RAW1_GET_X(data32_1));
-         float gry = gyro_from_uint16(UM6_GYRO_RAW1_GET_Y(data32_1));
-         float grz = gyro_from_uint16(UM6_GYRO_RAW2_GET_Z(data32_2));
-         //TOTO printf("gyro raw x = %f y = %f z = %f\n", grx, gry, grz);
+         data_out->gyro_raw.x = gyro_from_uint16(UM6_GYRO_RAW1_GET_X(data32_1));
+         data_out->gyro_raw.y = gyro_from_uint16(UM6_GYRO_RAW1_GET_Y(data32_1));
+         data_out->gyro_raw.z = gyro_from_uint16(UM6_GYRO_RAW2_GET_Z(data32_2));
+         data_out->gyro_raw.valid = 1;
+         um6_event_signal(&data_out->gyro_raw.event);
          break;
-      }
 
       case UM6_GYRO_PROC1:
-      {
-         float gx = gyro_from_uint16(UM6_GYRO_PROC1_GET_X(data32_1));
-         float gy = gyro_from_uint16(UM6_GYRO_PROC1_GET_Y(data32_1));
-         float gz = gyro_from_uint16(UM6_GYRO_PROC2_GET_Z(data32_2));
-         //TODO printf("gyro x = %f y = %f z = %f\n", gx, gy, gz);
+         data_out->gyro_proc.x = gyro_from_uint16(UM6_GYRO_PROC1_GET_X(data32_1));
+         data_out->gyro_proc.y = gyro_from_uint16(UM6_GYRO_PROC1_GET_Y(data32_1));
+         data_out->gyro_proc.z = gyro_from_uint16(UM6_GYRO_PROC2_GET_Z(data32_2));
+         data_out->gyro_proc.valid = 1;
+         um6_event_signal(&data_out->gyro_proc.event);
          break;
-      }
 
       case UM6_ACC_PROC1:
-      {
-         float ax = acc_from_uint16(UM6_ACC_PROC1_GET_X(data32_1));
-         float ay = acc_from_uint16(UM6_ACC_PROC1_GET_Y(data32_1));
-         float az = acc_from_uint16(UM6_ACC_PROC2_GET_Z(data32_2));
-         //TODO printf("acc x = %f y = %f z = %f\n", ax, ay, az);
+         data_out->acc_proc.x = acc_from_uint16(UM6_ACC_PROC1_GET_X(data32_1));
+         data_out->acc_proc.y = acc_from_uint16(UM6_ACC_PROC1_GET_Y(data32_1));
+         data_out->acc_proc.z = acc_from_uint16(UM6_ACC_PROC2_GET_Z(data32_2));
+         data_out->acc_proc.valid = 1;
+         um6_event_signal(&data_out->acc_proc.event);
          break;
-      }
 
       case UM6_MAG_PROC1:
-      {
-         float mx = mag_from_uint16(UM6_MAG_PROC1_GET_X(data32_1));
-         float my = mag_from_uint16(UM6_MAG_PROC1_GET_Y(data32_1));
-         float mz = mag_from_uint16(UM6_MAG_PROC2_GET_Z(data32_2));
-         //TODO printf("mag x = %f y = %f z = %f\n", mx, my, mz);
+         data_out->mag_proc.x = mag_from_uint16(UM6_MAG_PROC1_GET_X(data32_1));
+         data_out->mag_proc.y = mag_from_uint16(UM6_MAG_PROC1_GET_Y(data32_1));
+         data_out->mag_proc.z = mag_from_uint16(UM6_MAG_PROC2_GET_Z(data32_2));
+         data_out->mag_proc.valid = 1;
+         um6_event_signal(&data_out->mag_proc.event);
          break;
-      }
 
       case UM6_EULER1:
-      {
-         float phi = euler_from_uint16(UM6_EULER1_GET_PHI(data32_1));
-         float theta = euler_from_uint16(UM6_EULER1_GET_THETA(data32_1));
-         float psi = euler_from_uint16(UM6_EULER2_GET_PSI(data32_2));
-         //TODO printf("euler roll = %f pitch = %f yaw = %f\n", phi, theta, psi);
+         data_out->euler.phi = euler_from_uint16(UM6_EULER1_GET_PHI(data32_1));
+         data_out->euler.theta = euler_from_uint16(UM6_EULER1_GET_THETA(data32_1));
+         data_out->euler.psi = euler_from_uint16(UM6_EULER2_GET_PSI(data32_2));
+         data_out->euler.valid = 1;
+         um6_event_signal(&data_out->euler.event);
          break;
-      }
    }
 }
 
@@ -127,9 +152,7 @@ void *um6_reader(void *arg)
          int ret = um6_parser_run(&parser, c);
          if (ret == 1)
          {
-            um6_lock(dev);
             handle_data(&dev->data, parser.ca, parser.data);
-            um6_unlock(dev);
          }
          else if (ret < 0 && start++ > UM6_DATA_MAX)
          {
@@ -142,12 +165,20 @@ void *um6_reader(void *arg)
 }
 
 
-void um6_dev_init(um6_dev_t *dev, um6_lock_t *lock, um6_io_t *io)
+void um6_dev_init(um6_dev_t *dev, um6_lock_t *lock, um6_io_t *io, um6_event_interface_t *event_interface)
 {
    dev->io = io;
    dev->lock = lock;
    memset(&dev->data, 0, sizeof(um6_data_t));
    um6_composer_init(&dev->composer);
+   um6_event_init(&dev->data.status.event, event_interface);
+   um6_event_init(&dev->data.temperature.event, event_interface);
+   um6_event_init(&dev->data.comm.event, event_interface);
+   um6_event_init(&dev->data.gyro_raw.event, event_interface);
+   um6_event_init(&dev->data.gyro_proc.event, event_interface);
+   um6_event_init(&dev->data.acc_proc.event, event_interface);
+   um6_event_init(&dev->data.mag_proc.event, event_interface);
+   um6_event_init(&dev->data.euler.event, event_interface);
 }
 
 

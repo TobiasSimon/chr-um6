@@ -30,6 +30,32 @@
 #include "../wire_format/um6_composer.h"
 
 
+typedef struct
+{
+   void *(*create)(void);
+   int (*timed_wait)(void *data, unsigned int timeout);
+   void (*wait)(void *data);
+   void (*signal)(void *data);
+}
+um6_event_interface_t;
+
+
+typedef struct
+{
+   void *data;
+   um6_event_interface_t *interface;
+}
+um6_event_t;
+
+void um6_event_init(um6_event_t *event, um6_event_interface_t *interface);
+
+int um6_event_timed_wait(um6_event_t *event, unsigned int timeout);
+
+void um6_event_wait(um6_event_t *event);
+
+void um6_event_signal(um6_event_t *event);
+
+
 /*
  * generic um6 3d vector:
  */
@@ -46,16 +72,62 @@ typedef struct
       float a[3];
    };
    int valid;
+   um6_event_t event;
 }
 um6_vec3d_t;
 
 
 typedef struct
 {
-   float val;
+   union
+   {
+      struct
+      {
+         float phi;
+         float theta;
+         float psi;
+      };
+      float a[3];
+   };
    int valid;
+   um6_event_t event;
+}
+um6_euler_t;
+
+
+typedef struct
+{
+   float data;
+   int valid;
+   um6_event_t event;
 }
 um6_float_t;
+
+
+typedef struct
+{
+   uint32_t data;
+   int valid;
+   um6_event_t event;
+}
+um6_uint32_t;
+
+
+typedef struct
+{
+   um6_vec3d_t gyro_raw;
+   um6_vec3d_t acc_raw;
+   um6_vec3d_t mag_raw;
+   um6_vec3d_t gyro_proc;
+   um6_vec3d_t acc_proc;
+   um6_vec3d_t mag_proc;
+   um6_euler_t euler;
+   um6_float_t temperature;
+   um6_uint32_t status;
+   um6_uint32_t comm;
+   um6_uint32_t misc;
+}
+um6_data_t;
 
 
 typedef struct
@@ -78,19 +150,6 @@ um6_io_t;
 
 typedef struct
 {
-   um6_vec3d_t gyro_raw;
-   um6_vec3d_t acc_raw;
-   um6_vec3d_t mag_raw;
-   um6_vec3d_t gyro_proc;
-   um6_vec3d_t acc_proc;
-   um6_vec3d_t mag_proc;
-   um6_float_t temperature;
-}
-um6_data_t;
-
-
-typedef struct
-{
    um6_io_t *io; /* abstract io interface */
    um6_lock_t *lock; /* abstract lock for data protection */
    um6_data_t data; /* date written by reader thread */
@@ -103,7 +162,8 @@ int um6_lock(um6_dev_t *lock);
 
 int um6_unlock(um6_dev_t *lock);
 
-void um6_dev_init(um6_dev_t *dev, um6_lock_t *lock, um6_io_t *io);
+void um6_dev_init(um6_dev_t *dev, um6_lock_t *lock, um6_io_t *io,
+                  um6_event_interface_t *event_interface);
 
 void *um6_reader(void *arg);
 

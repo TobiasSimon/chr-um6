@@ -26,6 +26,7 @@
 #include "../interface/chr_um6.h"
 #include "../sys/posix_serial.h"
 #include "../sys/posix_lock.h"
+#include "../sys/posix_event.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -40,29 +41,32 @@ int main(void)
    serialport_t port;
    serial_open(&port, "/dev/ttyUSB0", 115200, 0, 0, 0);
    
+   um6_event_interface_t event_interface;
+   event_interface.create = posix_event_create;
+   event_interface.timed_wait = posix_event_timed_wait;
+   event_interface.wait = posix_event_wait;
+   event_interface.signal = posix_event_signal;
+
+   
    io.context = (void *)&port;
    io.read = (int(*)(void *))serial_read_char;
    io.write = (int(*)(void *, uint8_t))serial_write_char;
 
    um6_posix_lock_init(&lock);
-   um6_dev_init(&dev, &lock, &io);
+   um6_dev_init(&dev, &lock, &io, &event_interface);
    dev.lock = &lock;
    dev.io = &io;
 
    pthread_t thread;
    pthread_create(&thread, NULL, um6_reader, &dev);
-   sleep(1);
   
    while (1)
    {
-      um6_compose_and_send(&dev, NULL, 0, 0, UM6_COMM);
-      um6_lock(&dev);
-      if (dev.data.temperature.valid)
-      {
-         printf("TEMPERATURE: %f\n", dev.data.temperature.val);
-      }
-      um6_unlock(&dev);
-      sleep(1);
+      um6_compose_and_send(&dev, NULL, 0, 0, UM6_STATUS);
+      um6_event_timed_wait(&dev.data.status.event, 1);
+      
+      printf("comm\n");
+      //printf("euler: yaw: %f pitch: %f roll: %f\n", dev.data.euler.psi, dev.data.euler.theta, dev.data.euler.phi);
    }
    return 0;
 }
