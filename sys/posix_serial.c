@@ -197,7 +197,7 @@ int serial_write(const serialport_t *port, const char *buffer, unsigned int len)
 }
 
 
-int serial_write_char(const serialport_t *port, unsigned char c)
+int serial_write_char(const serialport_t *port, const char c)
 {
    return serial_write(port, &c, 1);
 }

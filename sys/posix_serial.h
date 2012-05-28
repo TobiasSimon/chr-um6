@@ -26,7 +26,7 @@ int serial_read_buffer(char *buffer, int buf_size, const serialport_t *port);
 
 int serial_write(const serialport_t *port, const char *buffer, unsigned int len);
 
-int serial_write_char(const serialport_t *port, unsigned char c);
+int serial_write_char(const serialport_t *port, const char c);
 
 int serial_write_line(const serialport_t *port, const char *buffer);
 
