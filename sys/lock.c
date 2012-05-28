@@ -1,7 +1,7 @@
 
 /* 
- * File: posix_event.h
- * Purpose: event implementation using POSIX
+ * File: lock.h
+ * Purpose: lock interface
  *
  * Copyright (C) 2012 Tobias Simon, Ilmenau University of Technology
  *
@@ -21,15 +21,23 @@
  */
 
 
-#ifndef __POSIX_EVENT_H__
-#define __POSIX_EVENT_H__
+#include "lock.h"
 
 
-#include "event.h"
+void lock_init(lock_t *lock, lock_interface_t *interface)
+{
+   lock->data = interface->create();
+   lock->interface = interface;
+}
+
+int lock_acquire(lock_t *lock)
+{
+   return lock->interface->acquire(lock->data);
+}
 
 
-void posix_event_interface_init(event_interface_t *interface);
-
-
-#endif /* __POSIX_EVENT_H__ */
+int lock_release(lock_t *lock)
+{
+   return lock->interface->release(lock->data);
+}
 

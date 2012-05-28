@@ -21,12 +21,12 @@
  */
 
 
-
 #include "../regs/um6_regs.h"
 #include "../interface/chr_um6.h"
 #include "../sys/posix_serial.h"
 #include "../sys/posix_lock.h"
 #include "../sys/posix_event.h"
+#include "../sys/lock.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -47,8 +47,10 @@ int main(void)
    io.write = (int(*)(void *, uint8_t))serial_write_char;
 
    /* set-up lock: */
-   um6_lock_t lock;
-   um6_posix_lock_init(&lock);
+   lock_interface_t lock_interface;
+   posix_lock_interface_init(&lock_interface);
+   lock_t lock;
+   lock_init(&lock, &lock_interface);
 
    /* finally, create device: */
    um6_dev_t dev;

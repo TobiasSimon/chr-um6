@@ -28,24 +28,9 @@
 #include <stdint.h>
 
 #include "../wire_format/um6_composer.h"
-#include "../sys/event_interface.h"
+#include "../sys/event.h"
+#include "../sys/lock.h"
 
-
-typedef struct
-{
-   void *data;
-   event_interface_t *interface;
-}
-um6_event_t;
-
-
-void um6_event_init(um6_event_t *event, event_interface_t *interface);
-
-int um6_event_timed_wait(um6_event_t *event, unsigned int timeout);
-
-void um6_event_wait(um6_event_t *event);
-
-void um6_event_signal(um6_event_t *event);
 
 
 /*
@@ -64,7 +49,7 @@ typedef struct
       float a[3];
    };
    int valid;
-   um6_event_t event;
+   event_t event;
 }
 um6_vec3d_t;
 
@@ -82,7 +67,7 @@ typedef struct
       float a[3];
    };
    int valid;
-   um6_event_t event;
+   event_t event;
 }
 um6_euler_t;
 
@@ -91,7 +76,7 @@ typedef struct
 {
    float data;
    int valid;
-   um6_event_t event;
+   event_t event;
 }
 um6_float_t;
 
@@ -100,7 +85,7 @@ typedef struct
 {
    uint32_t data;
    int valid;
-   um6_event_t event;
+   event_t event;
 }
 um6_uint32_t;
 
@@ -122,14 +107,6 @@ typedef struct
 um6_data_t;
 
 
-typedef struct
-{
-   void *context;
-   int (*lock)(void *context); /* returns 0 on success or a negative error code */
-   int (*unlock)(void *context); /* returns 0 on success or a negative error code */
-}
-um6_lock_t;
-
 
 typedef struct
 {
@@ -143,18 +120,14 @@ um6_io_t;
 typedef struct
 {
    um6_io_t *io; /* abstract io interface */
-   um6_lock_t *lock; /* abstract lock for data protection */
+   lock_t *lock; /* abstract lock for data protection */
    um6_data_t data; /* date written by reader thread */
    um6_composer_t composer; /* composer for sending data */
 }
 um6_dev_t;
 
 
-int um6_lock(um6_dev_t *lock);
-
-int um6_unlock(um6_dev_t *lock);
-
-void um6_dev_init(um6_dev_t *dev, um6_lock_t *lock, um6_io_t *io,
+void um6_dev_init(um6_dev_t *dev, lock_t *lock, um6_io_t *io,
                   event_interface_t *event_interface);
 
 void *um6_reader(void *arg);

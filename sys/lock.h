@@ -1,7 +1,7 @@
 
 /* 
- * File: posix_event.h
- * Purpose: event implementation using POSIX
+ * File: lock.h
+ * Purpose: lock interface
  *
  * Copyright (C) 2012 Tobias Simon, Ilmenau University of Technology
  *
@@ -21,15 +21,34 @@
  */
 
 
-#ifndef __POSIX_EVENT_H__
-#define __POSIX_EVENT_H__
+
+#ifndef __LOCK_H__
+#define __LOCK_H__
 
 
-#include "event.h"
+typedef struct
+{
+   void *(*create)(void);
+   int (*acquire)(void *data);
+   int (*release)(void *data);
+}
+lock_interface_t;
 
 
-void posix_event_interface_init(event_interface_t *interface);
+typedef struct
+{
+   void *data;
+   lock_interface_t *interface;
+}
+lock_t;
 
 
-#endif /* __POSIX_EVENT_H__ */
+void lock_init(lock_t *lock, lock_interface_t *interface);
+
+int lock_acquire(lock_t *lock);
+
+int lock_release(lock_t *lock);
+
+
+#endif /* __LOCK_H__ */
 

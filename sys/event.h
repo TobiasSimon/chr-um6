@@ -1,7 +1,7 @@
 
 /* 
- * File: posix_event.h
- * Purpose: event implementation using POSIX
+ * File: event.h
+ * Purpose: event interface
  *
  * Copyright (C) 2012 Tobias Simon, Ilmenau University of Technology
  *
@@ -21,15 +21,36 @@
  */
 
 
-#ifndef __POSIX_EVENT_H__
-#define __POSIX_EVENT_H__
+#ifndef __EVENT_H__
+#define __EVENT_H__
 
 
-#include "event.h"
+typedef struct
+{
+   void *(*create)(void);
+   int (*timed_wait)(void *data, unsigned int timeout);
+   void (*wait)(void *data);
+   void (*signal)(void *data);
+}
+event_interface_t;
 
 
-void posix_event_interface_init(event_interface_t *interface);
+typedef struct
+{
+   void *data;
+   event_interface_t *interface;
+}
+event_t;
 
 
-#endif /* __POSIX_EVENT_H__ */
+void event_init(event_t *event, event_interface_t *interface);
+
+int event_timed_wait(event_t *event, unsigned int timeout);
+
+void event_wait(event_t *event);
+
+void event_signal(event_t *event);
+
+
+#endif /* __EVENT_H__ */
 
