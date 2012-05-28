@@ -34,40 +34,37 @@
 
 int main(void)
 {   
-   um6_dev_t dev;
-   um6_lock_t lock;
-   um6_io_t io;
-
-   serialport_t port;
-   serial_open(&port, "/dev/ttyUSB0", 115200, 0, 0, 0);
-   
+   /* set up event interface: */
    um6_event_interface_t event_interface;
    event_interface.create = posix_event_create;
    event_interface.timed_wait = posix_event_timed_wait;
    event_interface.wait = posix_event_wait;
    event_interface.signal = posix_event_signal;
-
    
+   /* set up serial port: */
+   serialport_t port;
+   serial_open(&port, "/dev/ttyUSB0", 115200, 0, 0, 0);
+   um6_io_t io;
    io.context = (void *)&port;
    io.read = (int(*)(void *))serial_read_char;
    io.write = (int(*)(void *, uint8_t))serial_write_char;
 
+   /* set-up lock: */
+   um6_lock_t lock;
    um6_posix_lock_init(&lock);
-   um6_dev_init(&dev, &lock, &io, &event_interface);
-   dev.lock = &lock;
-   dev.io = &io;
 
+   /* finally, create device: */
+   um6_dev_t dev;
+   um6_dev_init(&dev, &lock, &io, &event_interface);
+   
+   /* create reader thread: */
    pthread_t thread;
    pthread_create(&thread, NULL, um6_reader, &dev);
-  
-   while (1)
-   {
-      um6_compose_and_send(&dev, NULL, 0, 0, UM6_STATUS);
-      um6_event_timed_wait(&dev.data.status.event, 1);
-      
-      printf("comm\n");
-      //printf("euler: yaw: %f pitch: %f roll: %f\n", dev.data.euler.psi, dev.data.euler.theta, dev.data.euler.phi);
-   }
+
+   /* request registers: */
+   UM6_STATUS_DEBUG(um6_get_status(&dev));
+   UM6_COMM_DEBUG(um6_get_comm(&dev));
+
    return 0;
 }
 

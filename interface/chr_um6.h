@@ -171,6 +171,9 @@ void *um6_reader(void *arg);
 int um6_compose_and_send(um6_dev_t *dev, const uint8_t *data, const uint8_t data_len,
                          const uint8_t is_batch, const uint8_t ca);
 
+uint32_t um6_get_status(um6_dev_t *dev);
+
+uint32_t um6_get_comm(um6_dev_t *dev);
 
 #endif /* __CHR_UM6_H__ */
 

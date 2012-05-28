@@ -70,69 +70,72 @@ int um6_unlock(um6_dev_t *dev)
 }
 
 
-static void handle_data(um6_data_t *data_out, uint8_t ca, uint8_t *data)
+static void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
 {
    uint32_t data32_1 = le32toh(*(uint32_t *)data);
    uint32_t data32_2 = le32toh(*(uint32_t *)(data + UM6_DATA_ITEM_SIZE));
    switch (ca)
    {
       case UM6_STATUS:
-         data_out->status.data = data32_1;
-         data_out->status.valid = 1;
-         um6_event_signal(&data_out->status.event);
+         out->status.data = data32_1;
+         out->status.valid = 1;
+         um6_event_signal(&out->status.event);
          break;
       
       case UM6_TEMPERATURE:
-         data_out->temperature.data = float_from_uint32(*(uint32_t *)data);
-         data_out->temperature.valid = 1;
-         um6_event_signal(&data_out->temperature.event);
+         out->temperature.data = float_from_uint32(*(uint32_t *)data);
+         out->temperature.valid = 1;
+         um6_event_signal(&out->temperature.event);
          break;
       
       case UM6_COMM:
-         data_out->comm.data = data32_1;
-         data_out->comm.valid = 1;
-         um6_event_signal(&data_out->comm.event);
+         out->comm.data = data32_1;
+         out->comm.valid = 1;
+         um6_event_signal(&out->comm.event);
          break;
       
       case UM6_GYRO_RAW1:
-         data_out->gyro_raw.x = gyro_from_uint16(UM6_GYRO_RAW1_GET_X(data32_1));
-         data_out->gyro_raw.y = gyro_from_uint16(UM6_GYRO_RAW1_GET_Y(data32_1));
-         data_out->gyro_raw.z = gyro_from_uint16(UM6_GYRO_RAW2_GET_Z(data32_2));
-         data_out->gyro_raw.valid = 1;
-         um6_event_signal(&data_out->gyro_raw.event);
+         out->gyro_raw.x = gyro_from_uint16(UM6_GYRO_RAW1_GET_X(data32_1));
+         out->gyro_raw.y = gyro_from_uint16(UM6_GYRO_RAW1_GET_Y(data32_1));
+         out->gyro_raw.z = gyro_from_uint16(UM6_GYRO_RAW2_GET_Z(data32_2));
+         out->gyro_raw.valid = 1;
+         um6_event_signal(&out->gyro_raw.event);
          break;
 
       case UM6_GYRO_PROC1:
-         data_out->gyro_proc.x = gyro_from_uint16(UM6_GYRO_PROC1_GET_X(data32_1));
-         data_out->gyro_proc.y = gyro_from_uint16(UM6_GYRO_PROC1_GET_Y(data32_1));
-         data_out->gyro_proc.z = gyro_from_uint16(UM6_GYRO_PROC2_GET_Z(data32_2));
-         data_out->gyro_proc.valid = 1;
-         um6_event_signal(&data_out->gyro_proc.event);
+         out->gyro_proc.x = gyro_from_uint16(UM6_GYRO_PROC1_GET_X(data32_1));
+         out->gyro_proc.y = gyro_from_uint16(UM6_GYRO_PROC1_GET_Y(data32_1));
+         out->gyro_proc.z = gyro_from_uint16(UM6_GYRO_PROC2_GET_Z(data32_2));
+         out->gyro_proc.valid = 1;
+         um6_event_signal(&out->gyro_proc.event);
          break;
 
       case UM6_ACC_PROC1:
-         data_out->acc_proc.x = acc_from_uint16(UM6_ACC_PROC1_GET_X(data32_1));
-         data_out->acc_proc.y = acc_from_uint16(UM6_ACC_PROC1_GET_Y(data32_1));
-         data_out->acc_proc.z = acc_from_uint16(UM6_ACC_PROC2_GET_Z(data32_2));
-         data_out->acc_proc.valid = 1;
-         um6_event_signal(&data_out->acc_proc.event);
+         out->acc_proc.x = acc_from_uint16(UM6_ACC_PROC1_GET_X(data32_1));
+         out->acc_proc.y = acc_from_uint16(UM6_ACC_PROC1_GET_Y(data32_1));
+         out->acc_proc.z = acc_from_uint16(UM6_ACC_PROC2_GET_Z(data32_2));
+         out->acc_proc.valid = 1;
+         um6_event_signal(&out->acc_proc.event);
          break;
 
       case UM6_MAG_PROC1:
-         data_out->mag_proc.x = mag_from_uint16(UM6_MAG_PROC1_GET_X(data32_1));
-         data_out->mag_proc.y = mag_from_uint16(UM6_MAG_PROC1_GET_Y(data32_1));
-         data_out->mag_proc.z = mag_from_uint16(UM6_MAG_PROC2_GET_Z(data32_2));
-         data_out->mag_proc.valid = 1;
-         um6_event_signal(&data_out->mag_proc.event);
+         out->mag_proc.x = mag_from_uint16(UM6_MAG_PROC1_GET_X(data32_1));
+         out->mag_proc.y = mag_from_uint16(UM6_MAG_PROC1_GET_Y(data32_1));
+         out->mag_proc.z = mag_from_uint16(UM6_MAG_PROC2_GET_Z(data32_2));
+         out->mag_proc.valid = 1;
+         um6_event_signal(&out->mag_proc.event);
          break;
 
       case UM6_EULER1:
-         data_out->euler.phi = euler_from_uint16(UM6_EULER1_GET_PHI(data32_1));
-         data_out->euler.theta = euler_from_uint16(UM6_EULER1_GET_THETA(data32_1));
-         data_out->euler.psi = euler_from_uint16(UM6_EULER2_GET_PSI(data32_2));
-         data_out->euler.valid = 1;
-         um6_event_signal(&data_out->euler.event);
+         out->euler.phi = euler_from_uint16(UM6_EULER1_GET_PHI(data32_1));
+         out->euler.theta = euler_from_uint16(UM6_EULER1_GET_THETA(data32_1));
+         out->euler.psi = euler_from_uint16(UM6_EULER2_GET_PSI(data32_2));
+         out->euler.valid = 1;
+         um6_event_signal(&out->euler.event);
          break;
+
+      default:
+         printf("%X\n", ca);
    }
 }
 
@@ -192,7 +195,7 @@ int um6_compose_and_send(um6_dev_t *dev, const uint8_t *data, const uint8_t data
    for (i = 0; i < dev->composer.size; i++)
    {
       ret = dev->io->write(dev->io->context, dev->composer.data[i]);
-      if (ret != 0)
+      if (ret != 1)
       {
          goto out;
       }
@@ -203,4 +206,18 @@ out:
 }
 
 
+uint32_t um6_get_status(um6_dev_t *dev)
+{
+   um6_compose_and_send(dev, NULL, 0, 0, UM6_STATUS);
+   um6_event_wait(&dev->data.status.event);
+   return dev->data.status.data;
+}
+
+
+uint32_t um6_get_comm(um6_dev_t *dev)
+{
+   um6_compose_and_send(dev, NULL, 0, 0, UM6_COMM);
+   um6_event_wait(&dev->data.comm.event);
+   return dev->data.comm.data;
+}
 
