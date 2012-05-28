@@ -33,7 +33,8 @@
 #include <math.h>
 
 
-void um6_event_init(um6_event_t *event, um6_event_interface_t *interface)
+
+void um6_event_init(um6_event_t *event, event_interface_t *interface)
 {
    event->data = interface->create();
    event->interface = interface;
@@ -168,7 +169,7 @@ void *um6_reader(void *arg)
 }
 
 
-void um6_dev_init(um6_dev_t *dev, um6_lock_t *lock, um6_io_t *io, um6_event_interface_t *event_interface)
+void um6_dev_init(um6_dev_t *dev, um6_lock_t *lock, um6_io_t *io, event_interface_t *event_interface)
 {
    dev->io = io;
    dev->lock = lock;

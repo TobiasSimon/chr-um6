@@ -35,11 +35,8 @@
 int main(void)
 {   
    /* set up event interface: */
-   um6_event_interface_t event_interface;
-   event_interface.create = posix_event_create;
-   event_interface.timed_wait = posix_event_timed_wait;
-   event_interface.wait = posix_event_wait;
-   event_interface.signal = posix_event_signal;
+   event_interface_t event_interface;
+   posix_event_interface_init(&event_interface);
    
    /* set up serial port: */
    serialport_t port;
@@ -64,7 +61,6 @@ int main(void)
    /* request registers: */
    UM6_STATUS_DEBUG(um6_get_status(&dev));
    UM6_COMM_DEBUG(um6_get_comm(&dev));
-
    return 0;
 }
 

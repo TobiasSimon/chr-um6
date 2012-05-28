@@ -28,26 +28,18 @@
 #include <stdint.h>
 
 #include "../wire_format/um6_composer.h"
-
-
-typedef struct
-{
-   void *(*create)(void);
-   int (*timed_wait)(void *data, unsigned int timeout);
-   void (*wait)(void *data);
-   void (*signal)(void *data);
-}
-um6_event_interface_t;
+#include "../sys/event_interface.h"
 
 
 typedef struct
 {
    void *data;
-   um6_event_interface_t *interface;
+   event_interface_t *interface;
 }
 um6_event_t;
 
-void um6_event_init(um6_event_t *event, um6_event_interface_t *interface);
+
+void um6_event_init(um6_event_t *event, event_interface_t *interface);
 
 int um6_event_timed_wait(um6_event_t *event, unsigned int timeout);
 
@@ -163,7 +155,7 @@ int um6_lock(um6_dev_t *lock);
 int um6_unlock(um6_dev_t *lock);
 
 void um6_dev_init(um6_dev_t *dev, um6_lock_t *lock, um6_io_t *io,
-                  um6_event_interface_t *event_interface);
+                  event_interface_t *event_interface);
 
 void *um6_reader(void *arg);
 

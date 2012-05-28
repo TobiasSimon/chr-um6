@@ -16,7 +16,7 @@ typedef struct
 posix_event_t;
 
 
-void *posix_event_create(void)
+static void *posix_event_create(void)
 {
    posix_event_t *pev = malloc(sizeof(posix_event_t));
    pthread_mutex_init(&pev->mutex, NULL);
@@ -25,7 +25,7 @@ void *posix_event_create(void)
 }
 
 
-int posix_event_timed_wait(void *event, unsigned int timeout)
+static int posix_event_timed_wait(void *event, unsigned int timeout)
 {
    posix_event_t *pev = (posix_event_t *)event;
    pthread_mutex_lock(&pev->mutex);
@@ -38,7 +38,7 @@ int posix_event_timed_wait(void *event, unsigned int timeout)
 }
 
 
-void posix_event_wait(void *event)
+static void posix_event_wait(void *event)
 {
    posix_event_t *pev = (posix_event_t *)event;
    pthread_mutex_lock(&pev->mutex);
@@ -47,11 +47,20 @@ void posix_event_wait(void *event)
 }
 
 
-void posix_event_signal(void *event)
+static void posix_event_signal(void *event)
 {
    posix_event_t *pev = (posix_event_t *)event;
    pthread_mutex_lock(&pev->mutex);
    pthread_cond_broadcast(&pev->cv);
    pthread_mutex_unlock(&pev->mutex);
+}
+
+
+void posix_event_interface_init(event_interface_t *event_interface)
+{
+   event_interface->create = posix_event_create;
+   event_interface->timed_wait = posix_event_timed_wait;
+   event_interface->wait = posix_event_wait;
+   event_interface->signal = posix_event_signal;
 }
 

@@ -3,13 +3,10 @@
 #define __POSIX_EVENT_H__
 
 
-void *posix_event_create(void);
+#include "event_interface.h"
 
-int posix_event_timed_wait(void *event, unsigned int timeout);
 
-void posix_event_wait(void *event);
-
-void posix_event_signal(void *event);
+void posix_event_interface_init(event_interface_t *event_interface);
 
 
 #endif /* __POSIX_EVENT_H__ */
