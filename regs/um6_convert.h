@@ -28,19 +28,19 @@
 #include <stdint.h>
 
 
-int16_t be16toi16(uint16_t val);
+int16_t biguint16_to_int16(uint16_t val);
 
 uint32_t float_to_uint32(float val);
 
-float float_from_uint32(uint32_t val);
+float int32_to_float(uint32_t val);
 
-float euler_from_uint16(uint16_t val);
+float uint16_to_euler(uint16_t val);
 
-float gyro_from_uint16(uint16_t val);
+float uint16_to_gyro(uint16_t val);
 
-float acc_from_uint16(uint16_t val);
+float uint16_to_acc(uint16_t val);
 
-float mag_from_uint16(uint16_t val);
+float uint16_to_mag(uint16_t val);
 
 
 #endif /* __UM6_CONVERT_H__ */

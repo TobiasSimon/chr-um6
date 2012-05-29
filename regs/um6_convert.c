@@ -33,44 +33,44 @@ uint32_t float_to_uint32(float val)
 }
 
 
-float float_from_uint32(uint32_t val)
+float int32_to_float(uint32_t val)
 {
   uint32_t host_val = be32toh(val);
   return *((float *)&host_val);
 }
 
 
-int16_t be16toi16(uint16_t val)
+int16_t biguint16_to_int16(uint16_t val)
 {
    uint16_t tmp = be16toh(val);
    return *(int16_t *)&tmp;
 }
 
 
-float euler_from_uint16(uint16_t val)
+float uint16_to_euler(uint16_t val)
 {
-   int16_t tmp = be16toi16(val);
+   int16_t tmp = be16toh(val);
    return ((float)tmp) * 0.0109863 / 180.0 * M_PI;
 }
 
 
-float gyro_from_uint16(uint16_t val)
+float uint16_to_gyro(uint16_t val)
 {
-   int16_t tmp = be16toi16(val);
+   int16_t tmp = be16toh(val);
    return ((float)tmp) * 0.0610352 / 180.0 * M_PI;
 }
 
 
-float acc_from_uint16(uint16_t val)
+float uint16_to_acc(uint16_t val)
 {
-   int16_t tmp = be16toi16(val);
-   return ((float)tmp) * 0.000183105;
+   int16_t tmp = be16toh(val);
+   return ((float)tmp) * 0.000183105 * 9.81;
 }
 
 
-float mag_from_uint16(uint16_t val)
+float uint16_to_mag(uint16_t val)
 {
-   int16_t tmp = be16toi16(val);
+   int16_t tmp = be16toh(val);
    return ((float)tmp) * 0.000305176;
 }
 

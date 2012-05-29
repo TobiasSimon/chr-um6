@@ -34,13 +34,6 @@
 #include <string.h>
 
 
-void um6_version(char *str, uint32_t data)
-{
-   memcpy(str, &data, 4);
-   str[4] = '\0';
-}
-
-
 int main(void)
 {   
    /* set up event interface: */
@@ -63,7 +56,7 @@ int main(void)
 
    /* finally, create device: */
    um6_dev_t dev;
-   um6_dev_init(&dev, &lock, &io, &event_interface);
+   um6_dev_init(&dev, &lock, &io, &event_interface, 1);
    
    /* create reader thread: */
    pthread_t thread;
@@ -73,17 +66,13 @@ int main(void)
 
    /* get and print firmware version: */
    char version_str[5];
-   um6_version(version_str, um6_get_fw_version(&dev));
+   um6_get_fw_version(&dev, version_str);
    printf("UM6 firmware version: %s\n", version_str);
 
    //um6_zero_gyros(&dev);
-   printf("mag var: %f\n", um6_get_mag_var(&dev));
+   float f;
+   um6_get_mag_var(&dev, &f);
    um6_set_mag_var(&dev, 0.001);
-   printf("mag var: %f\n", um6_get_mag_var(&dev));
-   printf("mag var: %f\n", um6_get_mag_var(&dev));
-   printf("mag var: %f\n", um6_get_mag_var(&dev));
-   printf("mag var: %f\n", um6_get_mag_var(&dev));
-   printf("mag var: %f\n", um6_get_mag_var(&dev));
    //um6_acc_ref(&dev);
    //um6_mag_ref(&dev);
 

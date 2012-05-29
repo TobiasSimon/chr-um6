@@ -58,25 +58,25 @@ static void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
          break;
 
       case UM6_EKF_MAG_VAR:
-         out->ekf_mag_var.data = float_from_uint32(*(uint32_t *)data);
+         out->ekf_mag_var.data = int32_to_float(*(uint32_t *)data);
          out->ekf_mag_var.valid = 1;
          event_signal(&out->ekf_mag_var.event);
          break;
 
       case UM6_EKF_ACC_VAR:
-         out->ekf_acc_var.data = float_from_uint32(*(uint32_t *)data);
+         out->ekf_acc_var.data = int32_to_float(*(uint32_t *)data);
          out->ekf_acc_var.valid = 1;
          event_signal(&out->ekf_acc_var.event);
          break;
 
       case UM6_EKF_PROC_VAR:
-         out->ekf_proc_var.data = float_from_uint32(*(uint32_t *)data);
+         out->ekf_proc_var.data = int32_to_float(*(uint32_t *)data);
          out->ekf_proc_var.valid = 1;
          event_signal(&out->ekf_proc_var.event);
          break;
 
       case UM6_TEMPERATURE:
-         out->temperature.data = float_from_uint32(*(uint32_t *)data);
+         out->temperature.data = int32_to_float(*(uint32_t *)data);
          out->temperature.valid = 1;
          event_signal(&out->temperature.event);
          break;
@@ -88,9 +88,9 @@ static void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
          break;
       
       case UM6_GYRO_BIAS1:
-         out->gyro_bias.x = be16toi16(UM6_GYRO_BIAS1_GET_X(data32_1));
-         out->gyro_bias.y = be16toi16(UM6_GYRO_BIAS1_GET_Y(data32_1));
-         out->gyro_bias.z = be16toi16(UM6_GYRO_BIAS2_GET_Z(data32_2));
+         out->gyro_bias.x = biguint16_to_int16(UM6_GYRO_BIAS1_GET_X(data32_1));
+         out->gyro_bias.y = biguint16_to_int16(UM6_GYRO_BIAS1_GET_Y(data32_1));
+         out->gyro_bias.z = biguint16_to_int16(UM6_GYRO_BIAS2_GET_Z(data32_2));
          out->gyro_bias.valid = 1;
          printf("gyro biases: %d %d %d\n", out->gyro_bias.x, out->gyro_bias.y, out->gyro_bias.z);
          event_signal(&out->gyro_bias.event);
@@ -104,43 +104,42 @@ static void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
          break;
       
       case UM6_GYRO_RAW1:
-         out->gyro_raw.x = gyro_from_uint16(UM6_GYRO_RAW1_GET_X(data32_1));
-         out->gyro_raw.y = gyro_from_uint16(UM6_GYRO_RAW1_GET_Y(data32_1));
-         out->gyro_raw.z = gyro_from_uint16(UM6_GYRO_RAW2_GET_Z(data32_2));
+         out->gyro_raw.x = uint16_to_gyro(UM6_GYRO_RAW1_GET_X(data32_1));
+         out->gyro_raw.y = uint16_to_gyro(UM6_GYRO_RAW1_GET_Y(data32_1));
+         out->gyro_raw.z = uint16_to_gyro(UM6_GYRO_RAW2_GET_Z(data32_2));
          out->gyro_raw.valid = 1;
          event_signal(&out->gyro_raw.event);
          break;
 
       case UM6_GYRO_PROC1:
-         out->gyro_proc.x = gyro_from_uint16(UM6_GYRO_PROC1_GET_X(data32_1));
-         out->gyro_proc.y = gyro_from_uint16(UM6_GYRO_PROC1_GET_Y(data32_1));
-         out->gyro_proc.z = gyro_from_uint16(UM6_GYRO_PROC2_GET_Z(data32_2));
+         out->gyro_proc.x = uint16_to_gyro(UM6_GYRO_PROC1_GET_X(data32_1));
+         out->gyro_proc.y = uint16_to_gyro(UM6_GYRO_PROC1_GET_Y(data32_1));
+         out->gyro_proc.z = uint16_to_gyro(UM6_GYRO_PROC2_GET_Z(data32_2));
          out->gyro_proc.valid = 1;
          event_signal(&out->gyro_proc.event);
          break;
 
       case UM6_ACC_PROC1:
-         out->acc_proc.x = acc_from_uint16(UM6_ACC_PROC1_GET_X(data32_1));
-         out->acc_proc.y = acc_from_uint16(UM6_ACC_PROC1_GET_Y(data32_1));
-         out->acc_proc.z = acc_from_uint16(UM6_ACC_PROC2_GET_Z(data32_2));
+         out->acc_proc.x = uint16_to_acc(UM6_ACC_PROC1_GET_X(data32_1));
+         out->acc_proc.y = uint16_to_acc(UM6_ACC_PROC1_GET_Y(data32_1));
+         out->acc_proc.z = uint16_to_acc(UM6_ACC_PROC2_GET_Z(data32_2));
          out->acc_proc.valid = 1;
          event_signal(&out->acc_proc.event);
          break;
 
       case UM6_MAG_PROC1:
-         out->mag_proc.x = mag_from_uint16(UM6_MAG_PROC1_GET_X(data32_1));
-         out->mag_proc.y = mag_from_uint16(UM6_MAG_PROC1_GET_Y(data32_1));
-         out->mag_proc.z = mag_from_uint16(UM6_MAG_PROC2_GET_Z(data32_2));
+         out->mag_proc.x = uint16_to_mag(UM6_MAG_PROC1_GET_X(data32_1));
+         out->mag_proc.y = uint16_to_mag(UM6_MAG_PROC1_GET_Y(data32_1));
+         out->mag_proc.z = uint16_to_mag(UM6_MAG_PROC2_GET_Z(data32_2));
          out->mag_proc.valid = 1;
          event_signal(&out->mag_proc.event);
          break;
 
       case UM6_EULER1:
-         out->euler.phi = euler_from_uint16(UM6_EULER1_GET_PHI(data32_1));
-         out->euler.theta = euler_from_uint16(UM6_EULER1_GET_THETA(data32_1));
-         out->euler.psi = euler_from_uint16(UM6_EULER2_GET_PSI(data32_2));
+         out->euler.phi = uint16_to_euler(UM6_EULER1_GET_PHI(data32_1));
+         out->euler.theta = uint16_to_euler(UM6_EULER1_GET_THETA(data32_1));
+         out->euler.psi = uint16_to_euler(UM6_EULER2_GET_PSI(data32_2));
          out->euler.valid = 1;
-         //printf("%f %f %f\n", out->euler.phi, out->euler.theta, out->euler.psi);
          event_signal(&out->euler.event);
          break;
 
@@ -164,13 +163,15 @@ static void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
          event_signal(&out->factory_reset_event);
          break;
 
-
-      default:
+     default:
          printf("unhandled command: %X\n", ca);
    }
 }
 
 
+/*
+ * data reader thread function
+ */
 void *um6_reader(void *arg)
 {
    um6_dev_t *dev = (um6_dev_t *)arg;
@@ -195,11 +196,11 @@ void *um6_reader(void *arg)
          }
       }
    }
-   pthread_exit(NULL);
+   return NULL;
 }
 
 
-void um6_dev_init(um6_dev_t *dev, lock_t *lock, um6_io_t *io, event_interface_t *event_interface)
+void um6_dev_init(um6_dev_t *dev, lock_t *lock, um6_io_t *io, event_interface_t *event_interface, unsigned int rx_timeout)
 {
    dev->io = io;
    dev->lock = lock;
@@ -226,8 +227,8 @@ void um6_dev_init(um6_dev_t *dev, lock_t *lock, um6_io_t *io, event_interface_t 
 }
 
 
-int um6_compose_and_send(um6_dev_t *dev, const uint8_t *data, const uint8_t data_len,
-                         const uint8_t is_batch, const uint8_t ca)
+static int um6_compose_and_send(um6_dev_t *dev, const uint8_t *data, const uint8_t data_len,
+                                const uint8_t is_batch, const uint8_t ca)
 {
    int ret;
    um6_lock(dev);
@@ -237,9 +238,7 @@ int um6_compose_and_send(um6_dev_t *dev, const uint8_t *data, const uint8_t data
    {
       ret = dev->io->write(dev->io->context, dev->composer.data[i]);
       if (ret != 1)
-      {
          goto out;
-      }
    }
 out:
    um6_unlock(dev);
@@ -247,116 +246,163 @@ out:
 }
 
 
-uint32_t um6_get_status(um6_dev_t *dev)
+static int um6_sync_send_noarg(um6_dev_t *dev, event_t *event, const uint8_t ca)
 {
-   um6_compose_and_send(dev, NULL, 0, 0, UM6_STATUS);
-   event_wait(&dev->data.status.event);
-   return dev->data.status.data;
+   int ret = um6_compose_and_send(dev, NULL, 0, 0, ca);
+   if (ret != 0)
+   {
+      return ret;
+   }
+   return event_timed_wait(event, dev->rx_timeout);
 }
 
 
-uint32_t um6_get_comm(um6_dev_t *dev)
+static int um6_sync_send_noarg_uint32(um6_dev_t *dev, um6_uint32_t *evdata, const uint8_t ca)
 {
-   um6_compose_and_send(dev, NULL, 0, 0, UM6_COMM);
-   event_wait(&dev->data.comm.event);
-   return dev->data.comm.data;
+   int ret = um6_compose_and_send(dev, NULL, 0, 0, ca);
+   if (ret != 0)
+   {
+      return ret;
+   }
+   return event_timed_wait(&evdata->event, dev->rx_timeout);
 }
 
 
-uint32_t um6_get_fw_version(um6_dev_t *dev)
+static int um6_sync_send_noarg_float(um6_dev_t *dev, um6_float_t *evdata, const uint8_t ca)
 {
-   um6_compose_and_send(dev, NULL, 0, 0, UM6_GET_FW_VERSION);
-   event_wait(&dev->data.fw_version.event);
-   return dev->data.fw_version.data;
+   int ret = um6_compose_and_send(dev, NULL, 0, 0, ca);
+   if (ret != 0)
+   {
+      return ret;
+   }
+   return event_timed_wait(&evdata->event, dev->rx_timeout);
 }
+
+
+static int um6_sync_send_float(um6_dev_t *dev, event_t *event, const uint8_t ca, float val)
+{
+   uint32_t u_val = float_to_uint32(val);
+   int ret = um6_compose_and_send(dev, (uint8_t *)&u_val, 4, 0, ca);
+   if (ret != 0)
+   {
+      return ret;
+   }
+   return event_timed_wait(event, dev->rx_timeout);
+}
+
+
+int um6_get_status(um6_dev_t *dev, uint32_t *out)
+{
+   int ret = um6_sync_send_noarg_uint32(dev, &dev->data.status, UM6_STATUS);
+   if (ret == 0)
+   {
+      *out = dev->data.status.data;
+   }
+   return ret;
+}
+
+
+int um6_get_comm(um6_dev_t *dev, uint32_t *out)
+{
+   int ret = um6_sync_send_noarg_uint32(dev, &dev->data.comm, UM6_COMM);
+   if (ret == 0)
+   {
+      *out = dev->data.comm.data;
+   }
+   return ret;
+}
+
+
+int um6_get_fw_version(um6_dev_t *dev, char *out)
+{
+   int ret = um6_sync_send_noarg_uint32(dev, &dev->data.fw_version, UM6_GET_FW_VERSION);
+   if (ret == 0)
+   {
+      memcpy(out, &dev->data.fw_version.data, 4);
+      out[4] = '\0';
+   }
+   return ret;
+}
+
 
 int um6_zero_gyros(um6_dev_t *dev)
 {
-   um6_compose_and_send(dev, NULL, 0, 0, UM6_ZERO_GYROS);
-   event_wait(&dev->data.zero_gyros_event);
-   return 0;
+   return um6_sync_send_noarg(dev, &dev->data.zero_gyros_event, UM6_ZERO_GYROS);
 }
+
 
 int um6_reset_ekf(um6_dev_t *dev)
 {
-   um6_compose_and_send(dev, NULL, 0, 0, UM6_RESET_EKF);
-   event_wait(&dev->data.ekf_reset_event);
-   return 0;
+   return um6_sync_send_noarg(dev, &dev->data.zero_gyros_event, UM6_RESET_EKF);
 }
 
 
 int um6_acc_ref(um6_dev_t *dev)
 {
-   um6_compose_and_send(dev, NULL, 0, 0, UM6_SET_ACC_REF);
-   event_wait(&dev->data.acc_ref_event);
-   return 0;
+   return um6_sync_send_noarg(dev, &dev->data.acc_ref_event, UM6_SET_ACC_REF);
 }
 
 
 int um6_mag_ref(um6_dev_t *dev)
 {
-   um6_compose_and_send(dev, NULL, 0, 0, UM6_SET_MAG_REF);
-   event_wait(&dev->data.mag_ref_event);
-   return 0;
+   return um6_sync_send_noarg(dev, &dev->data.mag_ref_event, UM6_SET_MAG_REF);
 }
 
 
 int um6_reset_to_factory(um6_dev_t *dev)
 {
-   um6_compose_and_send(dev, NULL, 0, 0, UM6_RESET_TO_FACTORY);
-   event_wait(&dev->data.factory_reset_event);
-   return 0;
+   return um6_sync_send_noarg(dev, &dev->data.factory_reset_event, UM6_RESET_TO_FACTORY);
 }
 
 
-float um6_get_mag_var(um6_dev_t *dev)
+int um6_get_mag_var(um6_dev_t *dev, float *out)
 {
-   um6_compose_and_send(dev, NULL, 0, 0, UM6_EKF_MAG_VAR);
-   event_wait(&dev->data.ekf_mag_var.event);
-   return dev->data.ekf_mag_var.data;
+   int ret = um6_sync_send_noarg_float(dev, &dev->data.ekf_mag_var, UM6_EKF_MAG_VAR);
+   if (ret == 0)
+   {
+      *out = dev->data.ekf_mag_var.data;
+   }
+   return ret;
 }
 
 
-float um6_get_acc_var(um6_dev_t *dev)
+float um6_get_acc_var(um6_dev_t *dev, float *out)
 {
-   um6_compose_and_send(dev, NULL, 0, 0, UM6_EKF_ACC_VAR);
-   event_wait(&dev->data.ekf_acc_var.event);
-   return dev->data.ekf_acc_var.data;
+   int ret = um6_sync_send_noarg_float(dev, &dev->data.ekf_acc_var, UM6_EKF_ACC_VAR);
+   if (ret == 0)
+   {
+      *out = dev->data.ekf_acc_var.data;
+   }
+   return ret;
 }
 
 
-float um6_get_proc_var(um6_dev_t *dev)
+float um6_get_proc_var(um6_dev_t *dev, float *out)
 {
-   um6_compose_and_send(dev, NULL, 0, 0, UM6_EKF_PROC_VAR);
-   event_wait(&dev->data.ekf_proc_var.event);
-   return dev->data.ekf_proc_var.data;
+   int ret = um6_sync_send_noarg_float(dev, &dev->data.ekf_proc_var, UM6_EKF_PROC_VAR);
+   if (ret == 0)
+   {
+      *out = dev->data.ekf_proc_var.data;
+   }
+   return ret;
+}
+
+ 
+int um6_set_mag_var(um6_dev_t *dev, float var)
+{
+   return um6_sync_send_float(dev, &dev->data.ekf_mag_var.event, UM6_EKF_MAG_VAR, var);
 }
 
 
-float um6_set_mag_var(um6_dev_t *dev, float var)
+int um6_set_acc_var(um6_dev_t *dev, float var)
 {
-   uint32_t u_var = float_to_uint32(var);
-   um6_compose_and_send(dev, (uint8_t *)&u_var, 4, 0, UM6_EKF_MAG_VAR);
-   //event_wait(&dev->data.ekf_mag_var.event);
-   return dev->data.ekf_mag_var.data;
+   return um6_sync_send_float(dev, &dev->data.ekf_acc_var.event, UM6_EKF_ACC_VAR, var);
 }
 
 
-float um6_set_acc_var(um6_dev_t *dev, float var)
+int um6_set_proc_var(um6_dev_t *dev, float var)
 {
-   uint32_t u_var = float_to_uint32(var);
-   um6_compose_and_send(dev, (uint8_t *)&u_var, 4, 0, UM6_EKF_ACC_VAR);
-   event_wait(&dev->data.ekf_acc_var.event);
-   return dev->data.ekf_acc_var.data;
-}
-
-
-float um6_set_proc_var(um6_dev_t *dev, float var)
-{
-   uint32_t u_var = float_to_uint32(var);
-   um6_compose_and_send(dev, (uint8_t *)&u_var, 4, 0, UM6_EKF_PROC_VAR);
-   event_wait(&dev->data.ekf_proc_var.event);
-   return dev->data.ekf_proc_var.data;
+   return um6_sync_send_float(dev, &dev->data.ekf_proc_var.event, UM6_EKF_PROC_VAR, var);
 }
 
 

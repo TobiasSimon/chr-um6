@@ -154,44 +154,100 @@ typedef struct
    lock_t *lock; /* abstract lock for data protection */
    um6_data_t data; /* date written by reader thread */
    um6_composer_t composer; /* composer for sending data */
+   unsigned int rx_timeout;
 }
 um6_dev_t;
 
 
 void um6_dev_init(um6_dev_t *dev, lock_t *lock, um6_io_t *io,
-                  event_interface_t *event_interface);
+                  event_interface_t *event_interface, unsigned int rx_timeout);
 
 void *um6_reader(void *arg);
 
 
-int um6_compose_and_send(um6_dev_t *dev, const uint8_t *data, const uint8_t data_len,
-                         const uint8_t is_batch, const uint8_t ca);
+/*
+ * get status register
+ */
+int um6_get_status(um6_dev_t *dev, uint32_t *out);
 
-uint32_t um6_get_status(um6_dev_t *dev);
 
-uint32_t um6_get_comm(um6_dev_t *dev);
+/*
+ * get communication register
+ */
+int um6_get_comm(um6_dev_t *dev, uint32_t *out);
 
+
+/*
+ * get firmware version string
+ * len(out) >= 5
+ */
+int um6_get_fw_version(um6_dev_t *dev, char *out);
+
+
+/*
+ * zero rate gyros
+ */
 int um6_zero_gyros(um6_dev_t *dev);
 
+
+/*
+ * reset extended kalman filter
+ */
 int um6_reset_ekf(um6_dev_t *dev);
 
+
+/*
+ * set acc reference vector to current acc readings
+ */
 int um6_acc_ref(um6_dev_t *dev);
 
+
+/*
+ * set mag regerence vector to current mag readings
+ */
 int um6_mag_ref(um6_dev_t *dev);
 
+
+/*
+ * reset settings to factory standard
+ */
 int um6_reset_to_factory(um6_dev_t *dev);
 
-float um6_get_mag_var(um6_dev_t *dev);
 
-float um6_get_acc_var(um6_dev_t *dev);
+/*
+ * read mag variance setting
+ */
+int um6_get_mag_var(um6_dev_t *dev, float *out);
 
-float um6_get_proc_var(um6_dev_t *dev);
 
-float um6_set_mag_var(um6_dev_t *dev, float var);
+/*
+ * read acc variance setting
+ */
+float um6_get_acc_var(um6_dev_t *dev, float *out);
 
-float um6_set_acc_var(um6_dev_t *dev, float var);
 
-float um6_set_proc_var(um6_dev_t *dev, float var);
+/*
+ * read process variance setting
+ */
+float um6_get_proc_var(um6_dev_t *dev, float *out);
+
+
+/*
+ * set mag variance
+ */
+int um6_set_mag_var(um6_dev_t *dev, float var);
+
+
+/*
+ * set acc variance
+ */
+int um6_set_acc_var(um6_dev_t *dev, float var);
+
+
+/*
+ * set process variance
+ */
+int um6_set_proc_var(um6_dev_t *dev, float var);
 
 
 #endif /* __CHR_UM6_H__ */
