@@ -260,6 +260,291 @@
 
 
 
+#define UM6_MAG_REF_X (0x2)
+
+
+
+#define UM6_MAG_REF_Y (0x3)
+
+
+
+#define UM6_MAG_REF_Z (0x4)
+
+
+
+#define UM6_ACC_REF_X (0x5)
+
+
+
+#define UM6_ACC_REF_Y (0x6)
+
+
+
+#define UM6_ACC_REF_Z (0x7)
+
+
+
+#define UM6_EKF_MAG_VAR (0x8)
+
+
+
+#define UM6_EKF_ACC_VAR (0x9)
+
+
+
+#define UM6_EKF_PROC_VAR (0xa)
+
+
+
+#define UM6_GYRO_BIAS_XY (0xb)
+#define UM6_GYRO_BIAS_XY_GET_X(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_GYRO_BIAS_XY_SET_X(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+#define UM6_GYRO_BIAS_XY_GET_Y(x) \
+   (((x) >> 16) & 0xffff)
+#define UM6_GYRO_BIAS_XY_SET_Y(x, v) \
+   do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
+
+#define UM6_GYRO_BIAS_XY_DEBUG(x) \
+   do { printf("GYRO_BIAS_XY: X = %X, "\
+      "Y = %X\n", UM6_GYRO_BIAS_XY_GET_X(x), \
+      UM6_GYRO_BIAS_XY_GET_Y(x)); } while(0)
+
+
+
+#define UM6_GYRO_BIAS_Z (0xc)
+#define UM6_GYRO_BIAS_Z_GET_X(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_GYRO_BIAS_Z_SET_X(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+/* bits 16 - 31 ignored */
+
+#define UM6_GYRO_BIAS_Z_DEBUG(x) \
+   do { printf("GYRO_BIAS_Z: X = %X\n", UM6_GYRO_BIAS_Z_GET_X(x)); } while(0)
+
+
+
+#define UM6_ACC_BIAS_XY (0xd)
+#define UM6_ACC_BIAS_XY_GET_X(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_ACC_BIAS_XY_SET_X(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+#define UM6_ACC_BIAS_XY_GET_Y(x) \
+   (((x) >> 16) & 0xffff)
+#define UM6_ACC_BIAS_XY_SET_Y(x, v) \
+   do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
+
+#define UM6_ACC_BIAS_XY_DEBUG(x) \
+   do { printf("ACC_BIAS_XY: X = %X, "\
+      "Y = %X\n", UM6_ACC_BIAS_XY_GET_X(x), \
+      UM6_ACC_BIAS_XY_GET_Y(x)); } while(0)
+
+
+
+#define UM6_ACC_BIAS_Z (0xe)
+#define UM6_ACC_BIAS_Z_GET_X(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_ACC_BIAS_Z_SET_X(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+/* bits 16 - 31 ignored */
+
+#define UM6_ACC_BIAS_Z_DEBUG(x) \
+   do { printf("ACC_BIAS_Z: X = %X\n", UM6_ACC_BIAS_Z_GET_X(x)); } while(0)
+
+
+
+#define UM6_MAG_BIAS_XY (0xf)
+#define UM6_MAG_BIAS_XY_GET_X(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_MAG_BIAS_XY_SET_X(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+#define UM6_MAG_BIAS_XY_GET_Y(x) \
+   (((x) >> 16) & 0xffff)
+#define UM6_MAG_BIAS_XY_SET_Y(x, v) \
+   do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
+
+#define UM6_MAG_BIAS_XY_DEBUG(x) \
+   do { printf("MAG_BIAS_XY: X = %X, "\
+      "Y = %X\n", UM6_MAG_BIAS_XY_GET_X(x), \
+      UM6_MAG_BIAS_XY_GET_Y(x)); } while(0)
+
+
+
+#define UM6_MAG_BIAS_Z (0x10)
+#define UM6_MAG_BIAS_Z_GET_X(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_MAG_BIAS_Z_SET_X(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+/* bits 16 - 31 ignored */
+
+#define UM6_MAG_BIAS_Z_DEBUG(x) \
+   do { printf("MAG_BIAS_Z: X = %X\n", UM6_MAG_BIAS_Z_GET_X(x)); } while(0)
+
+
+
+#define UM6_ACC_CAL_00 (0x11)
+
+
+
+#define UM6_ACC_CAL_01 (0x12)
+
+
+
+#define UM6_ACC_CAL_02 (0x13)
+
+
+
+#define UM6_ACC_CAL_11 (0x14)
+
+
+
+#define UM6_ACC_CAL_12 (0x15)
+
+
+
+#define UM6_ACC_CAL_13 (0x16)
+
+
+
+#define UM6_ACC_CAL_21 (0x16)
+
+
+
+#define UM6_ACC_CAL_22 (0x18)
+
+
+
+#define UM6_ACC_CAL_23 (0x19)
+
+
+
+#define UM6_GYRO_CAL_00 (0x1a)
+
+
+
+#define UM6_GYRO_CAL_01 (0x1b)
+
+
+
+#define UM6_GYRO_CAL_02 (0x1c)
+
+
+
+#define UM6_GYRO_CAL_11 (0x1d)
+
+
+
+#define UM6_GYRO_CAL_12 (0x1e)
+
+
+
+#define UM6_GYRO_CAL_13 (0x1f)
+
+
+
+#define UM6_GYRO_CAL_21 (0x20)
+
+
+
+#define UM6_GYRO_CAL_22 (0x21)
+
+
+
+#define UM6_GYRO_CAL_23 (0x22)
+
+
+
+#define UM6_MAG_CAL_00 (0x23)
+
+
+
+#define UM6_MAG_CAL_01 (0x24)
+
+
+
+#define UM6_MAG_CAL_02 (0x25)
+
+
+
+#define UM6_MAG_CAL_11 (0x26)
+
+
+
+#define UM6_MAG_CAL_12 (0x27)
+
+
+
+#define UM6_MAG_CAL_13 (0x28)
+
+
+
+#define UM6_MAG_CAL_21 (0x29)
+
+
+
+#define UM6_MAG_CAL_22 (0x2a)
+
+
+
+#define UM6_MAG_CAL_23 (0x2b)
+
+
+
+#define UM6_GYROX_BIAS_C0 (0x2c)
+
+
+
+#define UM6_GYROX_BIAS_C1 (0x2d)
+
+
+
+#define UM6_GYROX_BIAS_C2 (0x2e)
+
+
+
+#define UM6_GYROX_BIAS_C3 (0x2f)
+
+
+
+#define UM6_GYROY_BIAS_C0 (0x30)
+
+
+
+#define UM6_GYROY_BIAS_C1 (0x31)
+
+
+
+#define UM6_GYROY_BIAS_C2 (0x32)
+
+
+
+#define UM6_GYROY_BIAS_C3 (0x33)
+
+
+
+#define UM6_GYROZ_BIAS_C0 (0x34)
+
+
+
+#define UM6_GYROZ_BIAS_C1 (0x35)
+
+
+
+#define UM6_GYROZ_BIAS_C2 (0x36)
+
+
+
+#define UM6_GYROZ_BIAS_C3 (0x37)
+
+
+
 /* status */
 #define UM6_STATUS (0x55)
 /* self-test complete */
@@ -498,6 +783,68 @@
 
 
 
+#define UM6_ACC_RAW1 (0x58)
+#define UM6_ACC_RAW1_GET_X(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_ACC_RAW1_SET_X(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+#define UM6_ACC_RAW1_GET_Y(x) \
+   (((x) >> 16) & 0xffff)
+#define UM6_ACC_RAW1_SET_Y(x, v) \
+   do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
+
+#define UM6_ACC_RAW1_DEBUG(x) \
+   do { printf("ACC_RAW1: X = %X, "\
+      "Y = %X\n", UM6_ACC_RAW1_GET_X(x), \
+      UM6_ACC_RAW1_GET_Y(x)); } while(0)
+
+
+
+#define UM6_ACC_RAW2 (0x59)
+#define UM6_ACC_RAW2_GET_Z(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_ACC_RAW2_SET_Z(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+/* bits 16 - 31 ignored */
+
+#define UM6_ACC_RAW2_DEBUG(x) \
+   do { printf("ACC_RAW2: Z = %X\n", UM6_ACC_RAW2_GET_Z(x)); } while(0)
+
+
+
+#define UM6_MAG_RAW1 (0x5a)
+#define UM6_MAG_RAW1_GET_X(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_MAG_RAW1_SET_X(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+#define UM6_MAG_RAW1_GET_Y(x) \
+   (((x) >> 16) & 0xffff)
+#define UM6_MAG_RAW1_SET_Y(x, v) \
+   do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
+
+#define UM6_MAG_RAW1_DEBUG(x) \
+   do { printf("MAG_RAW1: X = %X, "\
+      "Y = %X\n", UM6_MAG_RAW1_GET_X(x), \
+      UM6_MAG_RAW1_GET_Y(x)); } while(0)
+
+
+
+#define UM6_MAG_RAW2 (0x5b)
+#define UM6_MAG_RAW2_GET_Z(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_MAG_RAW2_SET_Z(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+/* bits 16 - 31 ignored */
+
+#define UM6_MAG_RAW2_DEBUG(x) \
+   do { printf("MAG_RAW2: Z = %X\n", UM6_MAG_RAW2_GET_Z(x)); } while(0)
+
+
+
 #define UM6_GYRO_PROC1 (0x5c)
 #define UM6_GYRO_PROC1_GET_X(x) \
    (((x) >> 0) & 0xffff)
@@ -622,7 +969,428 @@
 
 
 
+#define UM6_QUAT1 (0x64)
+#define UM6_QUAT1_GET_A(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_QUAT1_SET_A(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+#define UM6_QUAT1_GET_B(x) \
+   (((x) >> 16) & 0xffff)
+#define UM6_QUAT1_SET_B(x, v) \
+   do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
+
+#define UM6_QUAT1_DEBUG(x) \
+   do { printf("QUAT1: A = %X, "\
+      "B = %X\n", UM6_QUAT1_GET_A(x), \
+      UM6_QUAT1_GET_B(x)); } while(0)
+
+
+
+#define UM6_QUAT2 (0x65)
+#define UM6_QUAT2_GET_C(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_QUAT2_SET_C(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+#define UM6_QUAT2_GET_D(x) \
+   (((x) >> 16) & 0xffff)
+#define UM6_QUAT2_SET_D(x, v) \
+   do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
+
+#define UM6_QUAT2_DEBUG(x) \
+   do { printf("QUAT2: C = %X, "\
+      "D = %X\n", UM6_QUAT2_GET_C(x), \
+      UM6_QUAT2_GET_D(x)); } while(0)
+
+
+
+#define UM6_ERROR_COV_00 (0x66)
+
+
+
+#define UM6_ERROR_COV_01 (0x67)
+
+
+
+#define UM6_ERROR_COV_02 (0x68)
+
+
+
+#define UM6_ERROR_COV_03 (0x69)
+
+
+
+#define UM6_ERROR_COV_10 (0x6a)
+
+
+
+#define UM6_ERROR_COV_11 (0x6b)
+
+
+
+#define UM6_ERROR_COV_12 (0x6c)
+
+
+
+#define UM6_ERROR_COV_13 (0x6d)
+
+
+
+#define UM6_ERROR_COV_20 (0x6e)
+
+
+
+#define UM6_ERROR_COV_21 (0x6f)
+
+
+
+#define UM6_ERROR_COV_22 (0x70)
+
+
+
+#define UM6_ERROR_COV_23 (0x71)
+
+
+
+#define UM6_ERROR_COV_30 (0x72)
+
+
+
+#define UM6_ERROR_COV_31 (0x73)
+
+
+
+#define UM6_ERROR_COV_32 (0x74)
+
+
+
+#define UM6_ERROR_COV_33 (0x75)
+
+
+
 #define UM6_TEMPERATURE (0x76)
+
+
+
+#define UM6_GPS_LONGITUDE (0x77)
+
+
+
+#define UM6_GPS_LATITUDE (0x78)
+
+
+
+#define UM6_GPS_ALTITUDE (0x79)
+
+
+
+#define UM6_GPS_POS_NORTH (0x7a)
+
+
+
+#define UM6_GPS_POS_EAST (0x7b)
+
+
+
+#define UM6_GPS_POS_HEIGHT (0x7c)
+
+
+
+#define UM6_GPS_COURSE_SPEED (0x7d)
+#define UM6_GPS_COURSE_SPEED_GET_COURCE(x) \
+   (((x) >> 0) & 0xffff)
+#define UM6_GPS_COURSE_SPEED_SET_COURCE(x, v) \
+   do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
+
+#define UM6_GPS_COURSE_SPEED_GET_SPEED(x) \
+   (((x) >> 16) & 0xffff)
+#define UM6_GPS_COURSE_SPEED_SET_SPEED(x, v) \
+   do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
+
+#define UM6_GPS_COURSE_SPEED_DEBUG(x) \
+   do { printf("GPS_COURSE_SPEED: COURCE = %X, "\
+      "SPEED = %X\n", UM6_GPS_COURSE_SPEED_GET_COURCE(x), \
+      UM6_GPS_COURSE_SPEED_GET_SPEED(x)); } while(0)
+
+
+
+/* status */
+#define UM6_GPS_SAT_SUMMARY (0x7e)
+/* fix mode */
+#define UM6_GPS_SAT_SUMMARY_GET_MODE(x) \
+   (((x) >> 0) & 0x3)
+#define UM6_GPS_SAT_SUMMARY_SET_MODE(x, v) \
+   do {x &= ~(0x3 << 0); x |= (v & 0x3) << 0;} while(0)
+
+/* satellite count */
+#define UM6_GPS_SAT_SUMMARY_GET_SAT_COUNT(x) \
+   (((x) >> 2) & 0xf)
+#define UM6_GPS_SAT_SUMMARY_SET_SAT_COUNT(x, v) \
+   do {x &= ~(0xf << 2); x |= (v & 0xf) << 2;} while(0)
+
+/* horizontal dillusion of precision */
+#define UM6_GPS_SAT_SUMMARY_GET_HDOP(x) \
+   (((x) >> 6) & 0x3ff)
+#define UM6_GPS_SAT_SUMMARY_SET_HDOP(x, v) \
+   do {x &= ~(0x3ff << 6); x |= (v & 0x3ff) << 6;} while(0)
+
+/* vertical dillusion of precision */
+#define UM6_GPS_SAT_SUMMARY_GET_VDOP(x) \
+   (((x) >> 16) & 0x3ff)
+#define UM6_GPS_SAT_SUMMARY_SET_VDOP(x, v) \
+   do {x &= ~(0x3ff << 16); x |= (v & 0x3ff) << 16;} while(0)
+
+/* bits 26 - 31 ignored */
+
+#define UM6_GPS_SAT_SUMMARY_DEBUG(x) \
+   do { printf("GPS_SAT_SUMMARY: MODE = %X, "\
+      "SAT_COUNT = %X, "\
+      "HDOP = %X, "\
+      "VDOP = %X\n", UM6_GPS_SAT_SUMMARY_GET_MODE(x), \
+      UM6_GPS_SAT_SUMMARY_GET_SAT_COUNT(x), \
+      UM6_GPS_SAT_SUMMARY_GET_HDOP(x), \
+      UM6_GPS_SAT_SUMMARY_GET_VDOP(x)); } while(0)
+
+
+
+#define UM6_GPS_SAT_XY_0 (0x7f)
+#define UM6_GPS_SAT_XY_0_GET_X_ID(x) \
+   (((x) >> 0) & 0xff)
+#define UM6_GPS_SAT_XY_0_SET_X_ID(x, v) \
+   do {x &= ~(0xff << 0); x |= (v & 0xff) << 0;} while(0)
+
+#define UM6_GPS_SAT_XY_0_GET_X_SNR(x) \
+   (((x) >> 8) & 0xff)
+#define UM6_GPS_SAT_XY_0_SET_X_SNR(x, v) \
+   do {x &= ~(0xff << 8); x |= (v & 0xff) << 8;} while(0)
+
+#define UM6_GPS_SAT_XY_0_GET_Y_ID(x) \
+   (((x) >> 16) & 0xff)
+#define UM6_GPS_SAT_XY_0_SET_Y_ID(x, v) \
+   do {x &= ~(0xff << 16); x |= (v & 0xff) << 16;} while(0)
+
+#define UM6_GPS_SAT_XY_0_GET_Y_SNR(x) \
+   (((x) >> 24) & 0xff)
+#define UM6_GPS_SAT_XY_0_SET_Y_SNR(x, v) \
+   do {x &= ~(0xff << 24); x |= (v & 0xff) << 24;} while(0)
+
+#define UM6_GPS_SAT_XY_0_DEBUG(x) \
+   do { printf("GPS_SAT_XY_0: X_ID = %X, "\
+      "X_SNR = %X, "\
+      "Y_ID = %X, "\
+      "Y_SNR = %X\n", UM6_GPS_SAT_XY_0_GET_X_ID(x), \
+      UM6_GPS_SAT_XY_0_GET_X_SNR(x), \
+      UM6_GPS_SAT_XY_0_GET_Y_ID(x), \
+      UM6_GPS_SAT_XY_0_GET_Y_SNR(x)); } while(0)
+
+
+
+#define UM6_GPS_SAT_XY_1 (0x80)
+#define UM6_GPS_SAT_XY_1_GET_X_ID(x) \
+   (((x) >> 0) & 0xff)
+#define UM6_GPS_SAT_XY_1_SET_X_ID(x, v) \
+   do {x &= ~(0xff << 0); x |= (v & 0xff) << 0;} while(0)
+
+#define UM6_GPS_SAT_XY_1_GET_X_SNR(x) \
+   (((x) >> 8) & 0xff)
+#define UM6_GPS_SAT_XY_1_SET_X_SNR(x, v) \
+   do {x &= ~(0xff << 8); x |= (v & 0xff) << 8;} while(0)
+
+#define UM6_GPS_SAT_XY_1_GET_Y_ID(x) \
+   (((x) >> 16) & 0xff)
+#define UM6_GPS_SAT_XY_1_SET_Y_ID(x, v) \
+   do {x &= ~(0xff << 16); x |= (v & 0xff) << 16;} while(0)
+
+#define UM6_GPS_SAT_XY_1_GET_Y_SNR(x) \
+   (((x) >> 24) & 0xff)
+#define UM6_GPS_SAT_XY_1_SET_Y_SNR(x, v) \
+   do {x &= ~(0xff << 24); x |= (v & 0xff) << 24;} while(0)
+
+#define UM6_GPS_SAT_XY_1_DEBUG(x) \
+   do { printf("GPS_SAT_XY_1: X_ID = %X, "\
+      "X_SNR = %X, "\
+      "Y_ID = %X, "\
+      "Y_SNR = %X\n", UM6_GPS_SAT_XY_1_GET_X_ID(x), \
+      UM6_GPS_SAT_XY_1_GET_X_SNR(x), \
+      UM6_GPS_SAT_XY_1_GET_Y_ID(x), \
+      UM6_GPS_SAT_XY_1_GET_Y_SNR(x)); } while(0)
+
+
+
+#define UM6_GPS_SAT_XY_2 (0x81)
+#define UM6_GPS_SAT_XY_2_GET_X_ID(x) \
+   (((x) >> 0) & 0xff)
+#define UM6_GPS_SAT_XY_2_SET_X_ID(x, v) \
+   do {x &= ~(0xff << 0); x |= (v & 0xff) << 0;} while(0)
+
+#define UM6_GPS_SAT_XY_2_GET_X_SNR(x) \
+   (((x) >> 8) & 0xff)
+#define UM6_GPS_SAT_XY_2_SET_X_SNR(x, v) \
+   do {x &= ~(0xff << 8); x |= (v & 0xff) << 8;} while(0)
+
+#define UM6_GPS_SAT_XY_2_GET_Y_ID(x) \
+   (((x) >> 16) & 0xff)
+#define UM6_GPS_SAT_XY_2_SET_Y_ID(x, v) \
+   do {x &= ~(0xff << 16); x |= (v & 0xff) << 16;} while(0)
+
+#define UM6_GPS_SAT_XY_2_GET_Y_SNR(x) \
+   (((x) >> 24) & 0xff)
+#define UM6_GPS_SAT_XY_2_SET_Y_SNR(x, v) \
+   do {x &= ~(0xff << 24); x |= (v & 0xff) << 24;} while(0)
+
+#define UM6_GPS_SAT_XY_2_DEBUG(x) \
+   do { printf("GPS_SAT_XY_2: X_ID = %X, "\
+      "X_SNR = %X, "\
+      "Y_ID = %X, "\
+      "Y_SNR = %X\n", UM6_GPS_SAT_XY_2_GET_X_ID(x), \
+      UM6_GPS_SAT_XY_2_GET_X_SNR(x), \
+      UM6_GPS_SAT_XY_2_GET_Y_ID(x), \
+      UM6_GPS_SAT_XY_2_GET_Y_SNR(x)); } while(0)
+
+
+
+#define UM6_GPS_SAT_XY_3 (0x82)
+#define UM6_GPS_SAT_XY_3_GET_X_ID(x) \
+   (((x) >> 0) & 0xff)
+#define UM6_GPS_SAT_XY_3_SET_X_ID(x, v) \
+   do {x &= ~(0xff << 0); x |= (v & 0xff) << 0;} while(0)
+
+#define UM6_GPS_SAT_XY_3_GET_X_SNR(x) \
+   (((x) >> 8) & 0xff)
+#define UM6_GPS_SAT_XY_3_SET_X_SNR(x, v) \
+   do {x &= ~(0xff << 8); x |= (v & 0xff) << 8;} while(0)
+
+#define UM6_GPS_SAT_XY_3_GET_Y_ID(x) \
+   (((x) >> 16) & 0xff)
+#define UM6_GPS_SAT_XY_3_SET_Y_ID(x, v) \
+   do {x &= ~(0xff << 16); x |= (v & 0xff) << 16;} while(0)
+
+#define UM6_GPS_SAT_XY_3_GET_Y_SNR(x) \
+   (((x) >> 24) & 0xff)
+#define UM6_GPS_SAT_XY_3_SET_Y_SNR(x, v) \
+   do {x &= ~(0xff << 24); x |= (v & 0xff) << 24;} while(0)
+
+#define UM6_GPS_SAT_XY_3_DEBUG(x) \
+   do { printf("GPS_SAT_XY_3: X_ID = %X, "\
+      "X_SNR = %X, "\
+      "Y_ID = %X, "\
+      "Y_SNR = %X\n", UM6_GPS_SAT_XY_3_GET_X_ID(x), \
+      UM6_GPS_SAT_XY_3_GET_X_SNR(x), \
+      UM6_GPS_SAT_XY_3_GET_Y_ID(x), \
+      UM6_GPS_SAT_XY_3_GET_Y_SNR(x)); } while(0)
+
+
+
+#define UM6_GPS_SAT_XY_4 (0x83)
+#define UM6_GPS_SAT_XY_4_GET_X_ID(x) \
+   (((x) >> 0) & 0xff)
+#define UM6_GPS_SAT_XY_4_SET_X_ID(x, v) \
+   do {x &= ~(0xff << 0); x |= (v & 0xff) << 0;} while(0)
+
+#define UM6_GPS_SAT_XY_4_GET_X_SNR(x) \
+   (((x) >> 8) & 0xff)
+#define UM6_GPS_SAT_XY_4_SET_X_SNR(x, v) \
+   do {x &= ~(0xff << 8); x |= (v & 0xff) << 8;} while(0)
+
+#define UM6_GPS_SAT_XY_4_GET_Y_ID(x) \
+   (((x) >> 16) & 0xff)
+#define UM6_GPS_SAT_XY_4_SET_Y_ID(x, v) \
+   do {x &= ~(0xff << 16); x |= (v & 0xff) << 16;} while(0)
+
+#define UM6_GPS_SAT_XY_4_GET_Y_SNR(x) \
+   (((x) >> 24) & 0xff)
+#define UM6_GPS_SAT_XY_4_SET_Y_SNR(x, v) \
+   do {x &= ~(0xff << 24); x |= (v & 0xff) << 24;} while(0)
+
+#define UM6_GPS_SAT_XY_4_DEBUG(x) \
+   do { printf("GPS_SAT_XY_4: X_ID = %X, "\
+      "X_SNR = %X, "\
+      "Y_ID = %X, "\
+      "Y_SNR = %X\n", UM6_GPS_SAT_XY_4_GET_X_ID(x), \
+      UM6_GPS_SAT_XY_4_GET_X_SNR(x), \
+      UM6_GPS_SAT_XY_4_GET_Y_ID(x), \
+      UM6_GPS_SAT_XY_4_GET_Y_SNR(x)); } while(0)
+
+
+
+#define UM6_GPS_SAT_XY_5 (0x84)
+#define UM6_GPS_SAT_XY_5_GET_X_ID(x) \
+   (((x) >> 0) & 0xff)
+#define UM6_GPS_SAT_XY_5_SET_X_ID(x, v) \
+   do {x &= ~(0xff << 0); x |= (v & 0xff) << 0;} while(0)
+
+#define UM6_GPS_SAT_XY_5_GET_X_SNR(x) \
+   (((x) >> 8) & 0xff)
+#define UM6_GPS_SAT_XY_5_SET_X_SNR(x, v) \
+   do {x &= ~(0xff << 8); x |= (v & 0xff) << 8;} while(0)
+
+#define UM6_GPS_SAT_XY_5_GET_Y_ID(x) \
+   (((x) >> 16) & 0xff)
+#define UM6_GPS_SAT_XY_5_SET_Y_ID(x, v) \
+   do {x &= ~(0xff << 16); x |= (v & 0xff) << 16;} while(0)
+
+#define UM6_GPS_SAT_XY_5_GET_Y_SNR(x) \
+   (((x) >> 24) & 0xff)
+#define UM6_GPS_SAT_XY_5_SET_Y_SNR(x, v) \
+   do {x &= ~(0xff << 24); x |= (v & 0xff) << 24;} while(0)
+
+#define UM6_GPS_SAT_XY_5_DEBUG(x) \
+   do { printf("GPS_SAT_XY_5: X_ID = %X, "\
+      "X_SNR = %X, "\
+      "Y_ID = %X, "\
+      "Y_SNR = %X\n", UM6_GPS_SAT_XY_5_GET_X_ID(x), \
+      UM6_GPS_SAT_XY_5_GET_X_SNR(x), \
+      UM6_GPS_SAT_XY_5_GET_Y_ID(x), \
+      UM6_GPS_SAT_XY_5_GET_Y_SNR(x)); } while(0)
+
+
+
+#define UM6_GET_FW_VERSION (0xaa)
+
+
+
+#define UM6_FLASH_COMMIT (0xab)
+
+
+
+#define UM6_ZERO_GYROS (0xac)
+
+
+
+#define UM6_RESET_EKF (0xad)
+
+
+
+#define UM6_GET_DATA (0xae)
+
+
+
+#define UM6_SET_ACC_REF (0xaf)
+
+
+
+#define UM6_SET_MAG_REF (0xb0)
+
+
+
+#define UM6_RESET_TO_FACTORY (0xb1)
+
+
+
+#define UM6_SET_HOME_POS (0xb3)
+
+
+
+#define UM6_BAD_CHECKSUM (0xfd)
+
+
+
+#define UM6_UNKNOWN_ADDRESS (0xfe)
+
+
+
+#define UM6_INVALID_BATCH_SIZE (0xff)
 
 #endif /* __UM6_REGS_H__ */
 
