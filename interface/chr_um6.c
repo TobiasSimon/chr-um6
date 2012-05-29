@@ -45,6 +45,96 @@ int um6_unlock(um6_dev_t *dev)
 }
 
 
+/*
+ * determines the last broadcast command in order,
+ * according to "CHR_packet_handler.c" in firmware.
+ */
+static int last_broadcast_command(uint32_t comm)
+{
+   if (UM6_COMM_GET_SAT(comm))
+   {
+      return UM6_GPS_SAT_XY_5;
+   }
+   if (UM6_COMM_GET_VEL(comm))
+   {
+      return UM6_GPS_COURSE_SPEED;
+   }
+   if (UM6_COMM_GET_SUM(comm))
+   {
+      return UM6_GPS_SAT_SUMMARY;
+   }
+   if (UM6_COMM_GET_REL(comm))
+   {
+      return UM6_GPS_POS_HEIGHT;
+   }
+   if (UM6_COMM_GET_POS(comm))
+   {
+      return UM6_GPS_ALTITUDE;
+   }
+   if (UM6_COMM_GET_TEMP(comm))
+   {
+      return UM6_TEMPERATURE;
+   }
+   if (UM6_COMM_GET_COV(comm))
+   {
+      return UM6_ERROR_COV_30;
+   }
+   if (UM6_COMM_GET_QT(comm))
+   {
+      return UM6_QUAT1;
+   }
+   if (UM6_COMM_GET_EU(comm))
+   {
+      return UM6_EULER1;
+   }
+   if (UM6_COMM_GET_MP(comm))
+   {
+      return UM6_MAG_PROC1;
+   }
+   if (UM6_COMM_GET_AP(comm))
+   {
+      return UM6_ACC_PROC1;
+   }
+   if (UM6_COMM_GET_GP(comm))
+   {
+      return UM6_GYRO_PROC1;
+   }
+   if (UM6_COMM_GET_MR(comm))
+   {
+      return UM6_MAG_RAW1;
+   }
+   if (UM6_COMM_GET_GR(comm))
+   {
+      return UM6_GYRO_RAW1;
+   } 
+   if (UM6_COMM_GET_AR(comm))
+   {
+      return UM6_ACC_RAW1;
+   } 
+   return -1;
+}
+
+
+/*
+
+  1) raw acc
+  2) raw gyro
+  3) raw mag
+  4) proc gyro
+  5) proc acc
+  6) proc mag
+  7) euler
+  8) quaternion
+  9) covariance
+  10) temperature
+  11) GPS global position
+  12) GPS relative position
+  13) GPS satellite summary
+  14) GPS course and speed
+  15) GPS satellite info
+ */
+
+
 static void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
 {
    uint32_t data32_1 = le32toh(*(uint32_t *)data);
