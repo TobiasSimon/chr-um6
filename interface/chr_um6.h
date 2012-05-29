@@ -54,6 +54,27 @@ typedef struct
 um6_vec3d_t;
 
 
+/*
+ * generic um6 3d bias vector:
+ */
+typedef struct
+{
+   union
+   {
+      struct
+      {
+         int16_t x;
+         int16_t y;
+         int16_t z;
+      };
+      int16_t a[3];
+   };
+   int valid;
+   event_t event;
+}
+um6_bias3d_t;
+
+
 typedef struct
 {
    union
@@ -92,6 +113,11 @@ um6_uint32_t;
 
 typedef struct
 {
+   um6_bias3d_t gyro_bias;
+   um6_float_t temperature;
+   um6_float_t ekf_mag_var;
+   um6_float_t ekf_acc_var;
+   um6_float_t ekf_proc_var;
    um6_vec3d_t gyro_raw;
    um6_vec3d_t acc_raw;
    um6_vec3d_t mag_raw;
@@ -99,10 +125,15 @@ typedef struct
    um6_vec3d_t acc_proc;
    um6_vec3d_t mag_proc;
    um6_euler_t euler;
-   um6_float_t temperature;
    um6_uint32_t status;
    um6_uint32_t comm;
+   um6_uint32_t fw_version;
    um6_uint32_t misc;
+   event_t ekf_reset_event;
+   event_t zero_gyros_event;
+   event_t acc_ref_event;
+   event_t mag_ref_event;
+   event_t factory_reset_event;
 }
 um6_data_t;
 
@@ -139,6 +170,29 @@ int um6_compose_and_send(um6_dev_t *dev, const uint8_t *data, const uint8_t data
 uint32_t um6_get_status(um6_dev_t *dev);
 
 uint32_t um6_get_comm(um6_dev_t *dev);
+
+int um6_zero_gyros(um6_dev_t *dev);
+
+int um6_reset_ekf(um6_dev_t *dev);
+
+int um6_acc_ref(um6_dev_t *dev);
+
+int um6_mag_ref(um6_dev_t *dev);
+
+int um6_reset_to_factory(um6_dev_t *dev);
+
+float um6_get_mag_var(um6_dev_t *dev);
+
+float um6_get_acc_var(um6_dev_t *dev);
+
+float um6_get_proc_var(um6_dev_t *dev);
+
+float um6_set_mag_var(um6_dev_t *dev, float var);
+
+float um6_set_acc_var(um6_dev_t *dev, float var);
+
+float um6_set_proc_var(um6_dev_t *dev, float var);
+
 
 #endif /* __CHR_UM6_H__ */
 

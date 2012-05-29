@@ -28,6 +28,10 @@
 #include <stdint.h>
 
 
+int16_t be16toi16(uint16_t val);
+
+uint32_t float_to_uint32(float val);
+
 float float_from_uint32(uint32_t val);
 
 float euler_from_uint16(uint16_t val);

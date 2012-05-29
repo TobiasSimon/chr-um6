@@ -30,6 +30,15 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <stdint.h>
+#include <string.h>
+
+
+void um6_version(char *str, uint32_t data)
+{
+   memcpy(str, &data, 4);
+   str[4] = '\0';
+}
 
 
 int main(void)
@@ -60,9 +69,31 @@ int main(void)
    pthread_t thread;
    pthread_create(&thread, NULL, um6_reader, &dev);
 
+   sleep(1);
+
+   /* get and print firmware version: */
+   char version_str[5];
+   um6_version(version_str, um6_get_fw_version(&dev));
+   printf("UM6 firmware version: %s\n", version_str);
+
+   //um6_zero_gyros(&dev);
+   printf("mag var: %f\n", um6_get_mag_var(&dev));
+   um6_set_mag_var(&dev, 0.001);
+   printf("mag var: %f\n", um6_get_mag_var(&dev));
+   printf("mag var: %f\n", um6_get_mag_var(&dev));
+   printf("mag var: %f\n", um6_get_mag_var(&dev));
+   printf("mag var: %f\n", um6_get_mag_var(&dev));
+   printf("mag var: %f\n", um6_get_mag_var(&dev));
+   //um6_acc_ref(&dev);
+   //um6_mag_ref(&dev);
+
+   //um6_reset_ekf(&dev);
+   //um6_reset_to_factory(&dev);
+   //printf("%f\n", um6_get_mag_var(&dev));
    /* request registers: */
-   UM6_STATUS_DEBUG(um6_get_status(&dev));
-   UM6_COMM_DEBUG(um6_get_comm(&dev));
+   //UM6_STATUS_DEBUG(um6_get_status(&dev));
+   //UM6_COMM_DEBUG(um6_get_comm(&dev));
+sleep(1000);
    return 0;
 }
 

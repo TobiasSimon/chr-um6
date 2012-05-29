@@ -296,96 +296,96 @@
 
 
 
-#define UM6_GYRO_BIAS_XY (0xb)
-#define UM6_GYRO_BIAS_XY_GET_X(x) \
+#define UM6_GYRO_BIAS1 (0xb)
+#define UM6_GYRO_BIAS1_GET_X(x) \
    (((x) >> 0) & 0xffff)
-#define UM6_GYRO_BIAS_XY_SET_X(x, v) \
+#define UM6_GYRO_BIAS1_SET_X(x, v) \
    do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
 
-#define UM6_GYRO_BIAS_XY_GET_Y(x) \
+#define UM6_GYRO_BIAS1_GET_Y(x) \
    (((x) >> 16) & 0xffff)
-#define UM6_GYRO_BIAS_XY_SET_Y(x, v) \
+#define UM6_GYRO_BIAS1_SET_Y(x, v) \
    do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
 
-#define UM6_GYRO_BIAS_XY_DEBUG(x) \
-   do { printf("GYRO_BIAS_XY: X = %X, "\
-      "Y = %X\n", UM6_GYRO_BIAS_XY_GET_X(x), \
-      UM6_GYRO_BIAS_XY_GET_Y(x)); } while(0)
+#define UM6_GYRO_BIAS1_DEBUG(x) \
+   do { printf("GYRO_BIAS1: X = %X, "\
+      "Y = %X\n", UM6_GYRO_BIAS1_GET_X(x), \
+      UM6_GYRO_BIAS1_GET_Y(x)); } while(0)
 
 
 
-#define UM6_GYRO_BIAS_Z (0xc)
-#define UM6_GYRO_BIAS_Z_GET_X(x) \
+#define UM6_GYRO_BIAS2 (0xc)
+#define UM6_GYRO_BIAS2_GET_Z(x) \
    (((x) >> 0) & 0xffff)
-#define UM6_GYRO_BIAS_Z_SET_X(x, v) \
+#define UM6_GYRO_BIAS2_SET_Z(x, v) \
    do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
 
 /* bits 16 - 31 ignored */
 
-#define UM6_GYRO_BIAS_Z_DEBUG(x) \
-   do { printf("GYRO_BIAS_Z: X = %X\n", UM6_GYRO_BIAS_Z_GET_X(x)); } while(0)
+#define UM6_GYRO_BIAS2_DEBUG(x) \
+   do { printf("GYRO_BIAS2: Z = %X\n", UM6_GYRO_BIAS2_GET_Z(x)); } while(0)
 
 
 
-#define UM6_ACC_BIAS_XY (0xd)
-#define UM6_ACC_BIAS_XY_GET_X(x) \
+#define UM6_ACC_BIAS1 (0xd)
+#define UM6_ACC_BIAS1_GET_X(x) \
    (((x) >> 0) & 0xffff)
-#define UM6_ACC_BIAS_XY_SET_X(x, v) \
+#define UM6_ACC_BIAS1_SET_X(x, v) \
    do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
 
-#define UM6_ACC_BIAS_XY_GET_Y(x) \
+#define UM6_ACC_BIAS1_GET_Y(x) \
    (((x) >> 16) & 0xffff)
-#define UM6_ACC_BIAS_XY_SET_Y(x, v) \
+#define UM6_ACC_BIAS1_SET_Y(x, v) \
    do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
 
-#define UM6_ACC_BIAS_XY_DEBUG(x) \
-   do { printf("ACC_BIAS_XY: X = %X, "\
-      "Y = %X\n", UM6_ACC_BIAS_XY_GET_X(x), \
-      UM6_ACC_BIAS_XY_GET_Y(x)); } while(0)
+#define UM6_ACC_BIAS1_DEBUG(x) \
+   do { printf("ACC_BIAS1: X = %X, "\
+      "Y = %X\n", UM6_ACC_BIAS1_GET_X(x), \
+      UM6_ACC_BIAS1_GET_Y(x)); } while(0)
 
 
 
-#define UM6_ACC_BIAS_Z (0xe)
-#define UM6_ACC_BIAS_Z_GET_X(x) \
+#define UM6_ACC_BIAS2 (0xe)
+#define UM6_ACC_BIAS2_GET_Z(x) \
    (((x) >> 0) & 0xffff)
-#define UM6_ACC_BIAS_Z_SET_X(x, v) \
+#define UM6_ACC_BIAS2_SET_Z(x, v) \
    do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
 
 /* bits 16 - 31 ignored */
 
-#define UM6_ACC_BIAS_Z_DEBUG(x) \
-   do { printf("ACC_BIAS_Z: X = %X\n", UM6_ACC_BIAS_Z_GET_X(x)); } while(0)
+#define UM6_ACC_BIAS2_DEBUG(x) \
+   do { printf("ACC_BIAS2: Z = %X\n", UM6_ACC_BIAS2_GET_Z(x)); } while(0)
 
 
 
-#define UM6_MAG_BIAS_XY (0xf)
-#define UM6_MAG_BIAS_XY_GET_X(x) \
+#define UM6_MAG_BIAS1 (0xf)
+#define UM6_MAG_BIAS1_GET_X(x) \
    (((x) >> 0) & 0xffff)
-#define UM6_MAG_BIAS_XY_SET_X(x, v) \
+#define UM6_MAG_BIAS1_SET_X(x, v) \
    do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
 
-#define UM6_MAG_BIAS_XY_GET_Y(x) \
+#define UM6_MAG_BIAS1_GET_Y(x) \
    (((x) >> 16) & 0xffff)
-#define UM6_MAG_BIAS_XY_SET_Y(x, v) \
+#define UM6_MAG_BIAS1_SET_Y(x, v) \
    do {x &= ~(0xffff << 16); x |= (v & 0xffff) << 16;} while(0)
 
-#define UM6_MAG_BIAS_XY_DEBUG(x) \
-   do { printf("MAG_BIAS_XY: X = %X, "\
-      "Y = %X\n", UM6_MAG_BIAS_XY_GET_X(x), \
-      UM6_MAG_BIAS_XY_GET_Y(x)); } while(0)
+#define UM6_MAG_BIAS1_DEBUG(x) \
+   do { printf("MAG_BIAS1: X = %X, "\
+      "Y = %X\n", UM6_MAG_BIAS1_GET_X(x), \
+      UM6_MAG_BIAS1_GET_Y(x)); } while(0)
 
 
 
-#define UM6_MAG_BIAS_Z (0x10)
-#define UM6_MAG_BIAS_Z_GET_X(x) \
+#define UM6_MAG_BIAS2 (0x10)
+#define UM6_MAG_BIAS2_GET_Z(x) \
    (((x) >> 0) & 0xffff)
-#define UM6_MAG_BIAS_Z_SET_X(x, v) \
+#define UM6_MAG_BIAS2_SET_Z(x, v) \
    do {x &= ~(0xffff << 0); x |= (v & 0xffff) << 0;} while(0)
 
 /* bits 16 - 31 ignored */
 
-#define UM6_MAG_BIAS_Z_DEBUG(x) \
-   do { printf("MAG_BIAS_Z: X = %X\n", UM6_MAG_BIAS_Z_GET_X(x)); } while(0)
+#define UM6_MAG_BIAS2_DEBUG(x) \
+   do { printf("MAG_BIAS2: Z = %X\n", UM6_MAG_BIAS2_GET_Z(x)); } while(0)
 
 
 

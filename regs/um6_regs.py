@@ -65,39 +65,39 @@ regs = [
    ('EKF_MAG_VAR', 0x08, 32),
    ('EKF_ACC_VAR', 0x09, 32),
    ('EKF_PROC_VAR', 0x0A, 32),
-   ('GYRO_BIAS_XY', 0x0B, 32,
+   ('GYRO_BIAS1', 0x0B, 32,
       [
          ('X', 16),
          ('Y', 16)
       ]
    ),
-   ('GYRO_BIAS_Z', 0x0C, 32,
+   ('GYRO_BIAS2', 0x0C, 32,
       [
-         ('X', 16),
+         ('Z', 16),
          (None, 16)
       ]
    ),
-   ('ACC_BIAS_XY', 0x0D, 32,
+   ('ACC_BIAS1', 0x0D, 32,
       [
          ('X', 16),
          ('Y', 16)
       ]
    ),
-   ('ACC_BIAS_Z', 0x0E, 32,
+   ('ACC_BIAS2', 0x0E, 32,
       [
-         ('X', 16),
+         ('Z', 16),
          (None, 16)
       ]
    ),
-   ('MAG_BIAS_XY', 0x0F, 32,
+   ('MAG_BIAS1', 0x0F, 32,
       [
          ('X', 16),
          ('Y', 16)
       ]
    ),
-   ('MAG_BIAS_Z', 0x10, 32,
+   ('MAG_BIAS2', 0x10, 32,
       [
-         ('X', 16),
+         ('Z', 16),
          (None, 16)
       ]
    ),

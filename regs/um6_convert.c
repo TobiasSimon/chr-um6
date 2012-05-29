@@ -27,6 +27,12 @@
 #include <math.h>
 
 
+uint32_t float_to_uint32(float val)
+{
+  return htobe32(*(uint32_t *)&val);
+}
+
+
 float float_from_uint32(uint32_t val)
 {
   uint32_t host_val = be32toh(val);
@@ -34,7 +40,7 @@ float float_from_uint32(uint32_t val)
 }
 
 
-static inline int16_t be16toi16(uint16_t val)
+int16_t be16toi16(uint16_t val)
 {
    uint16_t tmp = be16toh(val);
    return *(int16_t *)&tmp;
