@@ -168,98 +168,100 @@ regs = [
    ),
    ('GYRO_RAW1', 0x56, 32,
       [
-         ('X', 16),
-         ('Y', 16)
+         ('Y', 16),
+         ('X', 16)
       ]
    ),
    ('GYRO_RAW2', 0x57, 32,
       [
-         ('Z', 16),
-         (None, 16)
+         (None, 16),
+         ('Z', 16)
       ]
    ),
    ('ACC_RAW1', 0x58, 32,
       [
-         ('X', 16),
-         ('Y', 16)
+         ('Y', 16),
+         ('X', 16)
       ]
    ),
    ('ACC_RAW2', 0x59, 32,
       [
-         ('Z', 16),
-         (None, 16)
+         (None, 16),
+         ('Z', 16)
       ]
    ),
    ('MAG_RAW1', 0x5A, 32,
       [
-         ('X', 16),
-         ('Y', 16)
+         ('Y', 16),
+         ('X', 16)
       ]
    ),
    ('MAG_RAW2', 0x5B, 32,
       [
-         ('Z', 16),
-         (None, 16)
+         (None, 16),
+         ('Z', 16)
       ]
    ),
    ('GYRO_PROC1', 0x5C, 32,
       [
-         ('X', 16),
-         ('Y', 16)
+         ('Y', 16),
+         ('X', 16)
       ]
    ),
    ('GYRO_PROC2', 0x5D, 32,
       [
-         ('Z', 16),
-         (None, 16)
+         (None, 16),
+         ('Z', 16)
       ]
    ),
    ('ACC_PROC1', 0x5E, 32,
       [
-         ('X', 16),
-         ('Y', 16)
+         ('Y', 16),
+         ('X', 16)
       ]
    ),
    ('ACC_PROC2', 0x5F, 32,
       [
-         ('Z', 16),
-         (None, 16)
+         (None, 16),
+         ('Z', 16)
       ]
    ),
    ('MAG_PROC1', 0x60, 32,
       [
-         ('X', 16),
-         ('Y', 16)
+         ('Y', 16),
+         ('X', 16)
       ]
    ),
    ('MAG_PROC2', 0x61, 32,
       [
-         ('Z', 16),
-         (None, 16)
+         (None, 16),
+         ('Z', 16)
       ]
    ),
    ('EULER1', 0x62, 32,
       [
-         ('PHI', 16),
-         ('THETA', 16)
+         ('THETA', 16),
+         ('PHI', 16)
       ]
    ),
    ('EULER2', 0x63, 32,
       [
-         ('PSI', 16),
-         (None, 16)
+         (None, 16),
+         ('PSI', 16)
       ]
    ),
+
+
    ('QUAT1', 0x64, 32,
       [
-         ('A', 16),
-         ('B', 16)
+         ('B', 16),
+         ('A', 16)
       ]
    ),
    ('QUAT2', 0x65, 32,
       [
-         ('C', 16),
-         ('D', 16)
+         ('D', 16),
+         ('C', 16)
       ]
    ),
    ('ERROR_COV_00', 0x66, 32),
@@ -287,65 +289,65 @@ regs = [
    ('GPS_POS_HEIGHT', 0x7C, 32),
    ('GPS_COURSE_SPEED', 0x7D, 32,
       [
-         ('COURCE', 16),
-         ('SPEED', 16)
+         ('SPEED', 16),
+         ('COURSE', 16)
       ]
    ),
    ('GPS_SAT_SUMMARY', 0x7E, 32, 'status',
       [
-         ('MODE',      2, 'fix mode'),
-         ('SAT_COUNT', 4, 'satellite count'),
-         ('HDOP',      10, 'horizontal dillusion of precision'),
+         (None,        6),
          ('VDOP',      10, 'vertical dillusion of precision'),
-         (None,        6)
+         ('HDOP',      10, 'horizontal dillusion of precision'),
+         ('SAT_COUNT', 4, 'satellite count'),
+         ('MODE',      2, 'fix mode')
       ]
    ),
    ('GPS_SAT_XY_0', 0x7F, 32,
       [
-         ('X_ID', 8),
-         ('X_SNR', 8),
          ('Y_ID', 8),
-         ('Y_SNR', 8)
+         ('Y_SNR', 8),
+         ('X_ID', 8),
+         ('X_SNR', 8)
       ]
    ),
    ('GPS_SAT_XY_1', 0x80, 32,
       [
-         ('X_ID', 8),
-         ('X_SNR', 8),
          ('Y_ID', 8),
-         ('Y_SNR', 8)
+         ('Y_SNR', 8),
+         ('X_ID', 8),
+         ('X_SNR', 8)
       ]
    ),
    ('GPS_SAT_XY_2', 0x81, 32,
       [
-         ('X_ID', 8),
-         ('X_SNR', 8),
          ('Y_ID', 8),
-         ('Y_SNR', 8)
+         ('Y_SNR', 8),
+         ('X_ID', 8),
+         ('X_SNR', 8)
       ]
    ),
    ('GPS_SAT_XY_3', 0x82, 32,
       [
-         ('X_ID', 8),
-         ('X_SNR', 8),
          ('Y_ID', 8),
-         ('Y_SNR', 8)
+         ('Y_SNR', 8),
+         ('X_ID', 8),
+         ('X_SNR', 8)
       ]
    ),
    ('GPS_SAT_XY_4', 0x83, 32,
       [
-         ('X_ID', 8),
-         ('X_SNR', 8),
          ('Y_ID', 8),
-         ('Y_SNR', 8)
+         ('Y_SNR', 8),
+         ('X_ID', 8),
+         ('X_SNR', 8)
       ]
    ),
    ('GPS_SAT_XY_5', 0x84, 32,
       [
-         ('X_ID', 8),
-         ('X_SNR', 8),
          ('Y_ID', 8),
-         ('Y_SNR', 8)
+         ('Y_SNR', 8),
+         ('X_ID', 8),
+         ('X_SNR', 8)
       ]
    ),
    ('GET_FW_VERSION', 0xAA, 0),

@@ -49,7 +49,7 @@ int16_t biguint16_to_int16(uint16_t val)
 
 float uint16_to_euler(uint16_t val)
 {
-   int16_t tmp = be16toh(val);
+   int16_t tmp = val; //be16toh(val);
    return ((float)tmp) * 0.0109863 / 180.0 * M_PI;
 }
 

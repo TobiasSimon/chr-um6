@@ -64,25 +64,131 @@ int main(void)
 
    sleep(1);
 
+   int ret;
    /* get and print firmware version: */
    char version_str[5];
-   um6_get_fw_version(&dev, version_str);
+   if ((ret = um6_get_fw_version(&dev, version_str)) != 0)
+   {
+      printf("could not read firmware version: err = %d\n", ret);
+   }
    printf("UM6 firmware version: %s\n", version_str);
 
-   //um6_zero_gyros(&dev);
-   float f;
-   um6_get_mag_var(&dev, &f);
-   um6_set_mag_var(&dev, 0.001);
-   //um6_acc_ref(&dev);
-   //um6_mag_ref(&dev);
+   printf("getting communication parameters\n");
+   uint32_t comm;
+   if ((ret = um6_get_comm(&dev, &comm)) != 0)
+   {
+      printf("could not read comm registers: err = %d\n", ret);
+      return ret;
+   }
+   uint8_t br = UM6_COMM_GET_BAUD_RATE(comm);
+   comm = 0;
+   UM6_COMM_SET_BAUD_RATE(comm, br);
+   UM6_COMM_SET_BC_RATE(comm, 0xF);
+   UM6_COMM_SET_EU(comm);
+   UM6_COMM_SET_AP(comm);
+   UM6_COMM_SET_GP(comm);
+   UM6_COMM_SET_BEN(comm);
+   printf("setting communication parameters\n");
+   if ((ret = um6_set_comm(&dev, comm)) != 0)
+   {
+      printf("could not send comm registers: err = %d\n", ret);
+      return ret;
+   }
+   sleep(1);
+   printf("reading communication parameters\n");
+   uint32_t comm_read;
+   if ((ret = um6_get_comm(&dev, &comm_read)) != 0)
+   {
+      printf("could not read comm registers: err = %d\n", ret);
+      return ret;
+   }
+   if (comm != comm_read)
+   {
+      printf("comm verify failed: wrote: %X, read: %X\n", comm, comm_read);
+   }
 
-   //um6_reset_ekf(&dev);
-   //um6_reset_to_factory(&dev);
-   //printf("%f\n", um6_get_mag_var(&dev));
-   /* request registers: */
-   //UM6_STATUS_DEBUG(um6_get_status(&dev));
-   //UM6_COMM_DEBUG(um6_get_comm(&dev));
-sleep(1000);
+   printf("zeroing rate gyros\n");
+   if ((ret = um6_zero_gyros(&dev)) != 0)
+   {
+      printf("could not zero gyros: err = %d\n", ret);
+      return ret;
+   }
+   if ((ret = event_timed_wait(&dev.data.gyro_bias.event, 3)) != 0)
+   {
+      printf("zero gyros failed: err = %d\n", ret);
+      return ret;
+   }
+#
+   printf("writing mag variance\n");
+   float proc_var = 1.0e-6;
+   float mag_var = 1.0e-3;
+   float acc_var = 1000.0;
+   if ((ret = um6_set_mag_var(&dev, mag_var)) != 0)
+   {
+      printf("could not set mag var: err = %d\n", ret);
+      return ret;
+   }
+   float mag_var_read;
+   if ((ret = um6_get_mag_var(&dev, &mag_var_read)) != 0)
+   {
+      printf("could not get mag var: err = %d\n", ret);
+      return ret;
+   }
+   if (mag_var_read != mag_var)
+   {
+      printf("mag var verify failed: wrote: %f, read: %f\n", mag_var, mag_var_read);
+      return -1;
+   }
+   
+   printf("writing acc variance\n");
+   if ((ret = um6_set_acc_var(&dev, acc_var)) != 0)
+   {
+      printf("could not set acc var: err = %d\n", ret);
+      return ret;
+   }
+   float acc_var_read;
+   if ((ret = um6_get_acc_var(&dev, &acc_var_read)) != 0)
+   {
+      printf("could not get acc var: err = %d\n", ret);
+      return ret;
+   }
+   if (acc_var_read != acc_var)
+   {
+      printf("acc var verify failed: wrote: %f, read: %f\n", acc_var, acc_var_read);
+      return -1;
+   }
+
+   printf("writing proc variance\n");
+   if ((ret = um6_set_proc_var(&dev, proc_var)) != 0)
+   {
+      printf("could not set proc var: err = %d\n", ret);
+      return ret;
+   }
+   float proc_var_read;
+   if ((ret = um6_get_proc_var(&dev, &proc_var_read)) != 0)
+   {
+      printf("could not get proc var: err = %d\n", ret);
+      return ret;
+   }
+   if (proc_var_read != proc_var)
+   {
+      printf("proc var verify failed: wrote: %f, read: %f\n", proc_var, proc_var_read);
+      return -1;
+   }
+
+   printf("resetting extended kalman filter\n");
+   if ((ret = um6_reset_ekf(&dev)) != 0)
+   {
+      printf("could not reset ekf: err = %d\n", ret);
+      return ret;
+   }
+
+   while (1)
+   {
+      event_wait(&dev.data.euler.event);
+      printf("%f %f %f\n", dev.data.euler.psi, dev.data.euler.theta, dev.data.euler.phi);
+   }
+
    return 0;
 }
 

@@ -26,6 +26,7 @@
 #include "../regs/um6_convert.h"
 #include "../regs/um6_regs.h"
 
+#include <errno.h>
 #include <pthread.h>
 #include <endian.h>
 #include <string.h>
@@ -137,8 +138,8 @@ static int last_broadcast_command(uint32_t comm)
 
 static void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
 {
-   uint32_t data32_1 = le32toh(*(uint32_t *)data);
-   uint32_t data32_2 = le32toh(*(uint32_t *)(data + UM6_DATA_ITEM_SIZE));
+   uint32_t data32_1 = be32toh(*(uint32_t *)data);
+   uint32_t data32_2 = be32toh(*(uint32_t *)(data + UM6_DATA_ITEM_SIZE));
    switch (ca)
    {
       case UM6_STATUS:
@@ -172,7 +173,7 @@ static void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
          break;
       
       case UM6_COMM:
-         out->comm.data = data32_1;
+         out->comm.data =  be32toh(*(uint32_t *)data);
          out->comm.valid = 1;
          event_signal(&out->comm.event);
          break;
@@ -182,10 +183,8 @@ static void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
          out->gyro_bias.y = biguint16_to_int16(UM6_GYRO_BIAS1_GET_Y(data32_1));
          out->gyro_bias.z = biguint16_to_int16(UM6_GYRO_BIAS2_GET_Z(data32_2));
          out->gyro_bias.valid = 1;
-         printf("gyro biases: %d %d %d\n", out->gyro_bias.x, out->gyro_bias.y, out->gyro_bias.z);
          event_signal(&out->gyro_bias.event);
          break;
-
 
       case UM6_GET_FW_VERSION:
          out->fw_version.data = data32_1;
@@ -253,6 +252,10 @@ static void handle_data(um6_data_t *out, uint8_t ca, uint8_t *data)
          event_signal(&out->factory_reset_event);
          break;
 
+     case UM6_BAD_CHECKSUM:
+         //printf("bad checksum\n");
+         break;
+
      default:
          printf("unhandled command: %X\n", ca);
    }
@@ -295,6 +298,8 @@ void um6_dev_init(um6_dev_t *dev, lock_t *lock, um6_io_t *io, event_interface_t 
    dev->io = io;
    dev->lock = lock;
    memset(&dev->data, 0, sizeof(um6_data_t));
+   dev->rx_timeout = rx_timeout;
+   dev->retry_count = 5; // TODO
    um6_composer_init(&dev->composer);
    event_init(&dev->data.status.event, event_interface);
    event_init(&dev->data.ekf_mag_var.event, event_interface);
@@ -328,8 +333,12 @@ static int um6_compose_and_send(um6_dev_t *dev, const uint8_t *data, const uint8
    {
       ret = dev->io->write(dev->io->context, dev->composer.data[i]);
       if (ret != 1)
+      {
+         ret = -EIO;
          goto out;
+      }
    }
+   ret = 0;
 out:
    um6_unlock(dev);
    return ret;
@@ -338,7 +347,68 @@ out:
 
 static int um6_sync_send_noarg(um6_dev_t *dev, event_t *event, const uint8_t ca)
 {
-   int ret = um6_compose_and_send(dev, NULL, 0, 0, ca);
+   int i;
+   for (i = 0; i < dev->retry_count; i++)
+   {
+      int ret = um6_compose_and_send(dev, NULL, 0, 0, ca);
+      if (ret != 0)
+      {
+         return ret;
+      }
+      ret = event_timed_wait(event, dev->rx_timeout);
+      if (ret == 0)
+      {
+         return 0;
+      }
+   }
+   return -EIO;
+}
+
+
+static int um6_sync_send_noarg_uint32(um6_dev_t *dev, um6_uint32_t *evdata, const uint8_t ca)
+{   
+   int i;
+   for (i = 0; i < dev->retry_count; i++)
+   {
+      int ret = um6_compose_and_send(dev, NULL, 0, 0, ca);
+      if (ret != 0)
+      {
+         return ret;
+      }
+      ret = event_timed_wait(&evdata->event, dev->rx_timeout);
+      if (ret == 0)
+      {
+         return 0;
+      }
+   }
+   return -EIO;
+}
+
+
+static int um6_sync_send_noarg_float(um6_dev_t *dev, um6_float_t *evdata, const uint8_t ca)
+{
+   int i;
+   for (i = 0; i < dev->retry_count; i++)
+   {
+      int ret = um6_compose_and_send(dev, NULL, 0, 0, ca);
+      if (ret != 0)
+      {
+         return ret;
+      }
+      ret = event_timed_wait(&evdata->event, dev->rx_timeout);
+      if (ret == 0)
+      {
+         return 0;
+      }
+   }
+   return -EIO;
+}
+
+
+static int um6_sync_send_float(um6_dev_t *dev, event_t *event, const uint8_t ca, float val)
+{
+   uint32_t u_val = float_to_uint32(val);
+   int ret = um6_compose_and_send(dev, (uint8_t *)&u_val, 4, 0, ca);
    if (ret != 0)
    {
       return ret;
@@ -347,31 +417,9 @@ static int um6_sync_send_noarg(um6_dev_t *dev, event_t *event, const uint8_t ca)
 }
 
 
-static int um6_sync_send_noarg_uint32(um6_dev_t *dev, um6_uint32_t *evdata, const uint8_t ca)
+static int um6_sync_send_uint32(um6_dev_t *dev, event_t *event, const uint8_t ca, uint32_t val)
 {
-   int ret = um6_compose_and_send(dev, NULL, 0, 0, ca);
-   if (ret != 0)
-   {
-      return ret;
-   }
-   return event_timed_wait(&evdata->event, dev->rx_timeout);
-}
-
-
-static int um6_sync_send_noarg_float(um6_dev_t *dev, um6_float_t *evdata, const uint8_t ca)
-{
-   int ret = um6_compose_and_send(dev, NULL, 0, 0, ca);
-   if (ret != 0)
-   {
-      return ret;
-   }
-   return event_timed_wait(&evdata->event, dev->rx_timeout);
-}
-
-
-static int um6_sync_send_float(um6_dev_t *dev, event_t *event, const uint8_t ca, float val)
-{
-   uint32_t u_val = float_to_uint32(val);
+   uint32_t u_val = htobe32(val);
    int ret = um6_compose_and_send(dev, (uint8_t *)&u_val, 4, 0, ca);
    if (ret != 0)
    {
@@ -403,6 +451,12 @@ int um6_get_comm(um6_dev_t *dev, uint32_t *out)
 }
 
 
+int um6_set_comm(um6_dev_t *dev, uint32_t val)
+{
+   return um6_sync_send_uint32(dev, &dev->data.comm.event, UM6_COMM, val);
+}
+
+
 int um6_get_fw_version(um6_dev_t *dev, char *out)
 {
    int ret = um6_sync_send_noarg_uint32(dev, &dev->data.fw_version, UM6_GET_FW_VERSION);
@@ -423,7 +477,7 @@ int um6_zero_gyros(um6_dev_t *dev)
 
 int um6_reset_ekf(um6_dev_t *dev)
 {
-   return um6_sync_send_noarg(dev, &dev->data.zero_gyros_event, UM6_RESET_EKF);
+   return um6_sync_send_noarg(dev, &dev->data.ekf_reset_event, UM6_RESET_EKF);
 }
 
 

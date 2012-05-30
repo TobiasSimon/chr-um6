@@ -155,6 +155,7 @@ typedef struct
    um6_data_t data; /* date written by reader thread */
    um6_composer_t composer; /* composer for sending data */
    unsigned int rx_timeout;
+   unsigned int retry_count;
 }
 um6_dev_t;
 
@@ -175,6 +176,12 @@ int um6_get_status(um6_dev_t *dev, uint32_t *out);
  * get communication register
  */
 int um6_get_comm(um6_dev_t *dev, uint32_t *out);
+
+
+/*
+ * set communication register
+ */
+int um6_set_comm(um6_dev_t *dev, uint32_t val);
 
 
 /*
